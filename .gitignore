@@ -1,3 +1,9 @@
 *.jl.cov
 *.jl.*.cov
 *.jl.mem
+
+deps/deps.jl
+deps/downloads
+deps/package
+deps/CLBlast-1.4.0-Linux-x64
+

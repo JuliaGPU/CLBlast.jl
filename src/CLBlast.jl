@@ -1,5 +1,7 @@
+__precompile__(true)
+
 module CLBlast
 
-# package code goes here
+using OpenCL: cl
 
 end # module
