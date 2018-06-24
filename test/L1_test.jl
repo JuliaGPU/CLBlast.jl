@@ -73,6 +73,17 @@ end
     end 
 end
 
+@testset "dotu" begin 
+    for elty in elty_L1
+        elty <: Complex || continue
+        x = rand(elty, n_L1)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, n_L1)
+        y_cl = cl.CLArray(queue, y)
+        @test LinAlg.BLAS.dotu(length(x), x, 1, y, 1) ≈ CLBlast.dotu(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
+    end 
+end
+
 
 
 @testset "asum" begin 
