@@ -8,12 +8,22 @@ baseurl = "https://github.com/CNugteren/CLBlast/releases/download/1.4.0/CLBlast-
 
 
 if is_windows()
-    error("Windows currently not supported with automatic build.")
+    if Sys.ARCH == :x86_64
+        name, ext = splitext(basename(baseurl * "Windows-x64.zip"))[1]
+        uri = URI(baseurl * "Windows-x64.zip")
+        basedir = joinpath(@__DIR__, name)
+        provides(
+            Binaries, uri,
+            libCLBLAS, unpacked_dir = basedir,
+            installed_libpath = joinpath(basedir, "lib"), os = :Windows
+        )
+    else
+        error("Only 64 bit windows supported with automatic build.")
+    end
 end
 
 if is_linux()
     if Sys.ARCH == :x86_64
-        push!(BinDeps.defaults, Binaries)
         name, ext = splitext(splitext(basename(baseurl * "Linux-x64.tar.gz"))[1])
         uri = URI(baseurl * "Linux-x64.tar.gz")
         basedir = joinpath(@__DIR__, name)
@@ -34,4 +44,3 @@ end
 
 @BinDeps.install Dict("libCLBlast" => "libCLBlast")
 
-is_linux() && Sys.ARCH == :x86_64 && pop!(BinDeps.defaults)
