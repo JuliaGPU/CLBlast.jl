@@ -9,9 +9,8 @@ baseurl = "https://github.com/CNugteren/CLBlast/releases/download/1.4.0/CLBlast-
 
 if is_windows()
     if Sys.ARCH == :x86_64
-        name, ext = splitext(basename(baseurl * "Windows-x64.zip"))
         uri = URI(baseurl * "Windows-x64.zip")
-        basedir = joinpath(@__DIR__, name)
+        basedir = @__DIR__
         provides(
             Binaries, uri,
             libCLBlast, unpacked_dir = basedir,
@@ -43,4 +42,3 @@ if is_apple()
 end
 
 @BinDeps.install Dict("libCLBlast" => "libCLBlast")
-
