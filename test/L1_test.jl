@@ -1,4 +1,16 @@
 
+@testset "swap!" begin 
+    for elty in elty_L1
+        x = rand(elty, n_L1)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, n_L1)
+        y_cl = cl.CLArray(queue, y)
+        CLBlast.swap!(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
+        @test cl.to_host(y_cl, queue=queue) ≈ x
+        @test cl.to_host(x_cl, queue=queue) ≈ y
+    end 
+end
+
 @testset "asum" begin 
     for elty in elty_L1
         x = rand(elty, n_L1)
