@@ -1,8 +1,7 @@
-#import Base.LinAlg.BLAS: asum
 
-for (func, elty) in [(:CLBlastSasum, Float32), (:CLBlastDasum, Float64),
-                     (:CLBlastScasum, Complex64), (:CLBlastDzasum, Complex128)]
-    #TODO: (:CLBlastHasum, Float16)
+for (func, elty) in [(:CLBlastSsum, Float32), (:CLBlastDsum, Float64),
+                     (:CLBlastScsum, Complex64), (:CLBlastDzsum, Complex128)]
+    #TODO: (:CLBlastHsum, Float16)
 
     @eval function $func(n::Integer, out_buffer::cl.CL_mem, out_offset::Integer, 
                          x_buffer::cl.CL_mem, x_offset::Integer, x_inc::Integer,
@@ -20,8 +19,8 @@ for (func, elty) in [(:CLBlastSasum, Float32), (:CLBlastDasum, Float64),
         return err
     end
 
-    @eval function asum(n::Integer, x::cl.CLArray{$elty}, x_inc::Integer;
-                        queue::cl.CmdQueue=cl.queue(x))
+    @eval function sum(n::Integer, x::cl.CLArray{$elty}, x_inc::Integer;
+                       queue::cl.CmdQueue=cl.queue(x))
         # output buffer and event
         ctx = cl.context(queue)
         out = zeros($elty, 1)
@@ -35,7 +34,7 @@ for (func, elty) in [(:CLBlastSasum, Float32), (:CLBlastDasum, Float64),
         cl.wait(event)
         cl.enqueue_read_buffer(queue, out_buffer, out, Csize_t(0), nothing, true)
 
-        return real(first(out))
+        return first(out)
     end
 
 end
