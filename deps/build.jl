@@ -14,7 +14,7 @@ if is_windows()
         basedir = joinpath(@__DIR__, name)
         provides(
             Binaries, uri,
-            libCLBLAS, unpacked_dir = basedir,
+            libCLBlast, unpacked_dir = basedir,
             installed_libpath = joinpath(basedir, "lib"), os = :Windows
         )
     else
