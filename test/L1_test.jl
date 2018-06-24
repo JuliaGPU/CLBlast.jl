@@ -15,8 +15,7 @@ end
     for elty in elty_L1
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
-        #α = rand(elty)
-        α = elty(3)
+        α = rand(elty)
         CLBlast.scal!(length(x_cl), α, x_cl, 1, queue=queue)
         LinAlg.BLAS.scal!(length(x), α, x, 1)
         if elty == Complex64
@@ -35,6 +34,18 @@ end
             end
         end
     end
+end
+
+@testset "copy!" begin 
+    for elty in elty_L1
+        x = rand(elty, n_L1)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, n_L1)
+        y_cl = cl.CLArray(queue, y)
+        CLBlast.copy!(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
+        @test cl.to_host(y_cl, queue=queue) ≈ x
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+    end 
 end
 
 @testset "asum" begin 
