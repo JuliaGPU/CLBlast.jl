@@ -128,3 +128,12 @@ end
         x[LinAlg.BLAS.iamax(length(x), x, 1)] ≈ x[CLBlast.iamax(length(x_cl), x_cl, 1, queue=queue)+1]
     end 
 end
+
+@testset "iamin" begin 
+    for elty in elty_L1
+        x = rand(elty, n_L1)
+        x_cl = cl.CLArray(queue, x)
+        #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
+        minimum(abs, x) ≈ x[CLBlast.iamin(length(x_cl), x_cl, 1, queue=queue)+1]
+    end 
+end
