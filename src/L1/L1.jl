@@ -6,6 +6,6 @@ include("dot.jl")
 include("dotu.jl")
 include("dotc.jl")
 include("nrm2.jl")
-
 include("asum.jl")
 include("sum.jl")
+include("iamax.jl")
