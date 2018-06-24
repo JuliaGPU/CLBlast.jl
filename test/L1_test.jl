@@ -1,4 +1,6 @@
 
+srand(12345)
+
 @testset "swap!" begin 
     for elty in elty_L1
         x = rand(elty, n_L1)
@@ -120,12 +122,19 @@ end
     end 
 end
 
+_internalnorm(z) = abs(real(z)) + abs(imag(z))
 @testset "iamax" begin 
     for elty in elty_L1
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
-        x[LinAlg.BLAS.iamax(length(x), x, 1)] ≈ x[CLBlast.iamax(length(x_cl), x_cl, 1, queue=queue)+1]
+        idx_BLAS = LinAlg.BLAS.iamax(length(x), x, 1)
+        idx_CLBlast = CLBlast.iamax(length(x_cl), x_cl, 1, queue=queue) + 1
+        if elty <: Real
+            @test _internalnorm(x[idx_BLAS]) ≈ _internalnorm(x[idx_CLBlast])
+        else
+            @test_skip _internalnorm(x[idx_BLAS]) ≈ _internalnorm(x[idx_CLBlast])
+        end
     end 
 end
 
@@ -134,6 +143,29 @@ end
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
-        minimum(abs, x) ≈ x[CLBlast.iamin(length(x_cl), x_cl, 1, queue=queue)+1]
+        idx_CLBlast = CLBlast.iamin(length(x_cl), x_cl, 1, queue=queue) + 1
+        @test_broken minimum(_internalnorm, x) ≈ _internalnorm(x[idx_CLBlast])
+    end 
+end
+
+@testset "had!" begin 
+    for elty in elty_L1
+        x = rand(elty, n_L1)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, n_L1)
+        y_cl = cl.CLArray(queue, y)
+        z = rand(elty, n_L1)
+        z_cl = cl.CLArray(queue, z)
+        α = rand(elty)
+        β = rand(elty)
+        if is_linux() && elty == Complex64
+            @test_skip CLBlast.had!(length(x_cl), α, x_cl, 1, y_cl, 1, β, z_cl, 1, queue=queue)
+        else
+            CLBlast.had!(length(x_cl), α, x_cl, 1, y_cl, 1, β, z_cl, 1, queue=queue)
+            z .= α .* x .* y .+ β .* z
+            @test cl.to_host(x_cl, queue=queue) ≈ x
+            @test cl.to_host(y_cl, queue=queue) ≈ y
+            @test cl.to_host(z_cl, queue=queue) ≈ z
+        end
     end 
 end
