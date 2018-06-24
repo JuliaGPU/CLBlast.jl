@@ -57,11 +57,15 @@ end
         y = rand(elty, n_L1)
         y_cl = cl.CLArray(queue, y)
         α = rand(elty)
-        @test_skip CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
-        y .= α .* x .+ y
-        @test cl.to_host(x_cl, queue=queue) ≈ x
-        @test_broken cl.to_host(y_cl, queue=queue) ≈ y
-    end 
+        if is_linux() && elty == Complex64
+            @test_skip CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
+        else
+            CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
+            y .= α .* x .+ y
+            @test cl.to_host(x_cl, queue=queue) ≈ x
+            @test cl.to_host(y_cl, queue=queue) ≈ y
+        end
+    end
 end
 
 @testset "dot" begin 
@@ -128,12 +132,12 @@ _internalnorm(z) = abs(real(z)) + abs(imag(z))
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
-        idx_BLAS = LinAlg.BLAS.iamax(length(x), x, 1)
         idx_CLBlast = CLBlast.iamax(length(x_cl), x_cl, 1, queue=queue) + 1
+        idx_BLAS = LinAlg.BLAS.iamax(length(x), x, 1)
         if elty <: Real
             @test _internalnorm(x[idx_BLAS]) ≈ _internalnorm(x[idx_CLBlast])
         else
-            @test_skip _internalnorm(x[idx_BLAS]) ≈ _internalnorm(x[idx_CLBlast])
+            @test_broken _internalnorm(x[idx_BLAS]) ≈ _internalnorm(x[idx_CLBlast])
         end
     end 
 end
