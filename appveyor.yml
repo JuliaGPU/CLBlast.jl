@@ -44,4 +44,4 @@ build_script:
       Pkg.clone(pwd(), \"CLBlast\"); Pkg.build(\"CLBlast\")"
 
 test_script:
-  - C:\projects\julia\bin\julia -e "Pkg.test(\"CLBlast\")"
+  - C:\projects\julia\bin\julia --check-bounds=yes --color=yes -e "Pkg.test(\"CLBlast\")"
