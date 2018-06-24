@@ -1,17 +1,17 @@
 
-for (func, elty) in [(:CLBlastSswap, Float32), (:CLBlastDswap, Float64),
-                     (:CLBlastCswap, Complex64), (:CLBlastZswap, Complex128)]
-    #TODO: (:CLBlastHswap, Float16)
+for (func, elty) in [(:CLBlastSaxpy, Float32), (:CLBlastDaxpy, Float64),
+                     (:CLBlastCaxpy, Complex64), (:CLBlastZaxpy, Complex128)]
+    #TODO: (:CLBlastHaxpy, Float16)
 
-    @eval function $func(n::Integer,
+    @eval function $func(n::Integer, alpha::$elty,
                          x_buffer::cl.CL_mem, x_offset::Integer, x_inc::Integer,
                          y_buffer::cl.CL_mem, y_offset::Integer, y_inc::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
             ($(string(func)), libCLBlast), 
             cl.CL_int,
-            (UInt64, Ptr{Void}, UInt64, UInt64, Ptr{Void}, UInt64, UInt64, Ptr{Void}, Ptr{Void}),
-            n, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
+            (UInt64, $elty, Ptr{Void}, UInt64, UInt64, Ptr{Void}, UInt64, UInt64, Ptr{Void}, Ptr{Void}),
+            n, alpha, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
             println(STDERR, "Calling function $(string(func)) failed!")
@@ -20,14 +20,15 @@ for (func, elty) in [(:CLBlastSswap, Float32), (:CLBlastDswap, Float64),
         return err
     end
 
-    @eval function swap!(n::Integer, 
+    @eval function axpy!(n::Integer, α::Number,
                          x::cl.CLArray{$elty}, x_inc::Integer,
                          y::cl.CLArray{$elty}, y_inc::Integer;
                          queue::cl.CmdQueue=cl.queue(x))
         # output event
         event = cl.Event(C_NULL)
+        alpha = convert($elty, α)
 
-        $func(Csize_t(n),
+        $func(Csize_t(n), alpha,
               pointer(x), Csize_t(0), Csize_t(x_inc),
               pointer(y), Csize_t(0), Csize_t(y_inc),
               queue, event)

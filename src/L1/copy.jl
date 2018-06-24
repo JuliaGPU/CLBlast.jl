@@ -25,7 +25,6 @@ for (func, elty) in [(:CLBlastScopy, Float32), (:CLBlastDcopy, Float64),
                          y::cl.CLArray{$elty}, y_inc::Integer;
                          queue::cl.CmdQueue=cl.queue(x))
         # output event
-        ctx = cl.context(queue)
         event = cl.Event(C_NULL)
 
         $func(Csize_t(n),

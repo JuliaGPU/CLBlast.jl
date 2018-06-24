@@ -23,7 +23,6 @@ for (func, elty) in [(:CLBlastSscal, Float32), (:CLBlastDscal, Float64),
                          x::cl.CLArray{$elty}, x_inc::Integer;
                          queue::cl.CmdQueue=cl.queue(x))
         # output event
-        ctx = cl.context(queue)
         event = cl.Event(C_NULL)
         alpha = convert($elty, α)
 

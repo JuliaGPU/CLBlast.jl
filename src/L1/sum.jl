@@ -30,7 +30,7 @@ for (func, elty) in [(:CLBlastSsum, Float32), (:CLBlastDsum, Float64),
         $func(Csize_t(n), pointer(out_buffer), Csize_t(0), pointer(x), Csize_t(0), Csize_t(x_inc),
               queue, event)
 
-        # read return value
+        # wait for kernel and read return value
         cl.wait(event)
         cl.enqueue_read_buffer(queue, out_buffer, out, Csize_t(0), nothing, true)
 
