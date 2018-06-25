@@ -34,5 +34,7 @@ srand(12345)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        @test_throws ArgumentError CLBlast.gemv!('A', α, A_cl, y_cl, β, x_cl, queue=queue)
     end 
 end
