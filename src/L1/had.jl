@@ -16,7 +16,7 @@ for (func, elty) in [(:CLBlastShad, Float32), (:CLBlastDhad, Float64),
             n, alpha, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, beta, z_buffer, z_offset, z_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string(func)) failed!")
+            println(STDERR, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err

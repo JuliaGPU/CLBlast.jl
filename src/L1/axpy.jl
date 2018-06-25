@@ -14,7 +14,7 @@ for (func, elty) in [(:CLBlastSaxpy, Float32), (:CLBlastDaxpy, Float64),
             n, alpha, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string(func)) failed!")
+            println(STDERR, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err

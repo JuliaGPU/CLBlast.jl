@@ -13,7 +13,7 @@ for (func, elty) in [(:CLBlastSscal, Float32), (:CLBlastDscal, Float64),
             n, alpha, x_buffer, x_offset, x_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string(func)) failed!")
+            println(STDERR, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err

@@ -12,7 +12,7 @@ for (func, elty) in [(:CLBlastCdotc, Complex64), (:CLBlastZdotc, Complex128)]
             n, out_buffer, out_offset, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string(func)) failed!")
+            println(STDERR, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err
