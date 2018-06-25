@@ -2,7 +2,7 @@ using BinDeps
 using Compat
 
 @BinDeps.setup
-libnames = ["libCLBlast", "libclblast"]
+libnames = ["libCLBlast", "libclblast", "clblast"]
 libCLBlast = library_dependency("libCLBlast", aliases = libnames)
 baseurl = "https://github.com/CNugteren/CLBlast/releases/download/1.4.0/CLBlast-1.4.0-"
 
@@ -13,8 +13,8 @@ if is_windows()
         basedir = @__DIR__
         provides(
             Binaries, uri,
-            libCLBlast, unpacked_dir = basedir,
-            installed_libpath = joinpath(basedir, "lib"), os = :Windows
+            libCLBlast, unpacked_dir = ".",
+            installed_libpath = joinpath(basedir, "libCLBlast", "lib"), os = :Windows
         )
     else
         error("Only 64 bit windows supported with automatic build.")
