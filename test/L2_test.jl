@@ -38,3 +38,38 @@ srand(12345)
         @test_throws ArgumentError CLBlast.gemv!('A', α, A_cl, y_cl, β, x_cl, queue=queue)
     end 
 end
+
+@testset "gbmv!" begin 
+    for elty in elty_L1
+        A = rand(elty, kl+ku+1, n_L2)
+        A_cl = cl.CLArray(queue, A)
+        x = rand(elty, n_L2)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, m_L2)
+        y_cl = cl.CLArray(queue, y)
+        α = rand(elty)
+        β = rand(elty)
+
+        is_linux() && elty == Complex64 && continue
+
+        CLBlast.gbmv!('N', m_L2, kl, ku, α, A_cl, x_cl, β, y_cl, queue=queue)
+        LinAlg.BLAS.gbmv!('N', m_L2, kl, ku, α, A, x, β, y)
+        @test cl.to_host(A_cl, queue=queue) ≈ A
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        CLBlast.gbmv!('T', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
+        LinAlg.BLAS.gbmv!('T', m_L2, kl, ku, α, A, y, β, x)
+        @test cl.to_host(A_cl, queue=queue) ≈ A
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        CLBlast.gbmv!('C', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
+        LinAlg.BLAS.gbmv!('C', m_L2, kl, ku, α, A, y, β, x)
+        @test cl.to_host(A_cl, queue=queue) ≈ A
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        @test_throws ArgumentError CLBlast.gbmv!('A', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
+    end 
+end
