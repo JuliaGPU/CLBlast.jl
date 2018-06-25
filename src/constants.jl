@@ -1,0 +1,7 @@
+
+@enum CLBlastLayout CLBlastLayoutRowMajor=101 CLBlastLayoutColMajor=102
+@enum CLBlastTranspose CLBlastTransposeNo=111 CLBlastTransposeYes=112 CLBlastTransposeConjugate=113
+@enum CLBlastTriangle CLBlastTriangleUpper=121 CLBlastTriangleLower=122
+@enum CLBlastDiagonal CLBlastDiagonalNonUnit=131 CLBlastDiagonalUnit=132
+@enum CLBlastSide CLBlastSideLeft=141 CLBlastSideRight=142
+@enum CLBlastPrecision CLBlastPrecisionHalf=16 CLBlastPrecisionSingle=32 CLBlastPrecisionDouble=64 CLBlastPrecisionComplexSingle=3232 CLBlastPrecisionComplexDouble=6464

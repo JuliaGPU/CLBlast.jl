@@ -11,6 +11,7 @@ else
     error("CLBlast not properly installed. Please run Pkg.build(\"CLBlast\") then restart Julia.")
 end
 
+include("constants.jl")
 include("L1/L1.jl")
 include("L2/L2.jl")
 include("L3/L3.jl")
