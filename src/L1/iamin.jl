@@ -9,7 +9,7 @@ for (func, elty) in [(:CLBlastiSamin, Float32), (:CLBlastiDamin, Float64),
         err = ccall(
             ($(string(func)), libCLBlast), 
             cl.CL_int,
-            (UInt64, Ptr{Void}, UInt64, Ptr{Void}, UInt64, UInt64, Ptr{Void}, Ptr{Void}),
+            (Csize_t, Ptr{Void}, Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             n, out_buffer, out_offset, x_buffer, x_offset, x_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS

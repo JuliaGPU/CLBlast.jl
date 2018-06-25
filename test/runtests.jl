@@ -14,5 +14,7 @@ const elty_L1 = (Float32, Float64, Complex64, Complex128)
 device, ctx, queue = cl.create_compute_context()
 
 @time @testset "BLAS Level 1" begin include("L1_test.jl") end
+@time @testset "BLAS Level 2" begin include("L2_test.jl") end
+@time @testset "BLAS Level 3" begin include("L3_test.jl") end
 
 end # module

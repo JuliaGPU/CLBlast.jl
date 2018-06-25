@@ -12,7 +12,7 @@ for (func, elty) in [(:CLBlastShad, Float32), (:CLBlastDhad, Float64),
         err = ccall(
             ($(string(func)), libCLBlast), 
             cl.CL_int,
-            (UInt64, $elty, Ptr{Void}, UInt64, UInt64, Ptr{Void}, UInt64, UInt64, $elty, Ptr{Void}, UInt64, UInt64, Ptr{Void}, Ptr{Void}),
+            (Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             n, alpha, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, beta, z_buffer, z_offset, z_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS

@@ -10,7 +10,7 @@ for (func, elty) in [(:CLBlastSswap, Float32), (:CLBlastDswap, Float64),
         err = ccall(
             ($(string(func)), libCLBlast), 
             cl.CL_int,
-            (UInt64, Ptr{Void}, UInt64, UInt64, Ptr{Void}, UInt64, UInt64, Ptr{Void}, Ptr{Void}),
+            (Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             n, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS

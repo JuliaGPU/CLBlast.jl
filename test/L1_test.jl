@@ -1,4 +1,3 @@
-
 srand(12345)
 
 @testset "swap!" begin 
