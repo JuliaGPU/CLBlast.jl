@@ -12,6 +12,8 @@ else
 end
 
 include("constants.jl")
+include("error.jl")
+
 include("L1/L1.jl")
 include("L2/L2.jl")
 include("L3/L3.jl")
