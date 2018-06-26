@@ -290,7 +290,11 @@ end
             CLBlast.herk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
             LinAlg.BLAS.herk!(uplo, 'N', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
-            @test_broken cl.to_host(C_cl, queue=queue) ≈ C
+            if is_linux()
+                @test_broken cl.to_host(C_cl, queue=queue) ≈ C
+            else
+                @test cl.to_host(C_cl, queue=queue) ≈ C
+            end
 
             @test_throws DimensionMismatch CLBlast.herk!(uplo, 'C', α, A_cl, β, C_cl, queue=queue)
         end
@@ -313,7 +317,11 @@ end
             CLBlast.herk!(uplo, 'C', α, A_cl, β, C_cl, queue=queue)
             LinAlg.BLAS.herk!(uplo, 'C', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
-            @test_broken cl.to_host(C_cl, queue=queue) ≈ C
+            if is_linux()
+                @test_broken cl.to_host(C_cl, queue=queue) ≈ C
+            else
+                @test cl.to_host(C_cl, queue=queue) ≈ C
+            end
 
             @test_throws DimensionMismatch CLBlast.herk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
         end

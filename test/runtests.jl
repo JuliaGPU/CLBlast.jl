@@ -13,9 +13,9 @@ const m_L2 = 60
 const n_L2 = 50
 const kl = 2
 const ku = 3
-const m_L3 = 60
-const n_L3 = 50
-const k_L3 = 40
+const m_L3 = 6
+const n_L3 = 5
+const k_L3 = 4
 const elty_L1 = (Float32, Float64, Complex64, Complex128)
 
 device, ctx, queue = cl.create_compute_context()
