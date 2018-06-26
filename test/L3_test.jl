@@ -238,16 +238,16 @@ end
         β = rand(elty)
 
         for uplo in ['U','L']
-            CLBlast.syrk!(uplo, 'N', α, A_cl,  β, C_cl, queue=queue)
+            CLBlast.syrk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
             LinAlg.BLAS.syrk!(uplo, 'N', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(C_cl, queue=queue) ≈ C
 
-            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'T', α, A_cl,  β, C_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'T', α, A_cl, β, C_cl, queue=queue)
         end
 
-        @test_throws ArgumentError CLBlast.syrk!('A', 'N', α, A_cl,  β, C_cl, queue=queue)
-        @test_throws ArgumentError CLBlast.syrk!('U', 'A', α, A_cl,  β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syrk!('A', 'N', α, A_cl, β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syrk!('U', 'A', α, A_cl, β, C_cl, queue=queue)
 
         # A'*A
         A = rand(elty, k_L3, n_L3)
@@ -258,15 +258,15 @@ end
         β = rand(elty)
 
         for uplo in ['U','L']
-            CLBlast.syrk!(uplo, 'T', α, A_cl,  β, C_cl, queue=queue)
+            CLBlast.syrk!(uplo, 'T', α, A_cl, β, C_cl, queue=queue)
             LinAlg.BLAS.syrk!(uplo, 'T', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(C_cl, queue=queue) ≈ C
 
-            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'N', α, A_cl,  β, C_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
         end
 
-        @test_throws ArgumentError CLBlast.syrk!('U', 'C', α, A_cl,  β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syrk!('U', 'C', α, A_cl, β, C_cl, queue=queue)
     end
 end
 
@@ -284,16 +284,16 @@ end
         β = rand(elty)
 
         for uplo in ['U','L']
-            CLBlast.syrk!(uplo, 'N', α, A_cl,  β, C_cl, queue=queue)
+            CLBlast.syrk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
             LinAlg.BLAS.syrk!(uplo, 'N', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(C_cl, queue=queue) ≈ C
 
-            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'T', α, A_cl,  β, C_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'T', α, A_cl, β, C_cl, queue=queue)
         end
 
-        @test_throws ArgumentError CLBlast.syrk!('A', 'N', α, A_cl,  β, C_cl, queue=queue)
-        @test_throws ArgumentError CLBlast.syrk!('U', 'A', α, A_cl,  β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syrk!('A', 'N', α, A_cl, β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syrk!('U', 'A', α, A_cl, β, C_cl, queue=queue)
 
         # A'*A
         A = rand(elty, k_L3, n_L3)
@@ -304,15 +304,64 @@ end
         β = rand(elty)
 
         for uplo in ['U','L']
-            CLBlast.syrk!(uplo, 'T', α, A_cl,  β, C_cl, queue=queue)
+            CLBlast.syrk!(uplo, 'T', α, A_cl, β, C_cl, queue=queue)
             LinAlg.BLAS.syrk!(uplo, 'T', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(C_cl, queue=queue) ≈ C
 
-            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'N', α, A_cl,  β, C_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.syrk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
         end
 
-        @test_throws ArgumentError CLBlast.syrk!('U', 'C', α, A_cl,  β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syrk!('U', 'C', α, A_cl, β, C_cl, queue=queue)
     end
 end
 
+@testset "syr2k!" begin 
+    for elty in elty_L1
+        is_linux() && elty == Complex64 && continue
+        elty <: Complex || continue
+
+        # A*B'
+        A = rand(elty, n_L3, k_L3)
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, n_L3, k_L3)
+        B_cl = cl.CLArray(queue, B)
+        C = rand(elty, n_L3, n_L3)
+        C_cl = cl.CLArray(queue, C)
+        α = rand(elty)
+        β = rand(elty)
+
+        for uplo in ['U','L']
+            CLBlast.syr2k!(uplo, 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
+            LinAlg.BLAS.syr2k!(uplo, 'N', α, A, B, β, C)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+            @test cl.to_host(C_cl, queue=queue) ≈ C
+
+            @test_throws DimensionMismatch CLBlast.syr2k!(uplo, 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
+        end
+
+        @test_throws ArgumentError CLBlast.syr2k!('A', 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.syr2k!('U', 'A', α, A_cl, B_cl, β, C_cl, queue=queue)
+
+        # A'*B
+        A = rand(elty, k_L3, n_L3)
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, k_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        C = rand(elty, n_L3, n_L3)
+        C_cl = cl.CLArray(queue, C)
+        α = rand(elty)
+        β = rand(elty)
+
+        for uplo in ['U','L']
+            CLBlast.syr2k!(uplo, 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
+            LinAlg.BLAS.syr2k!(uplo, 'T', α, A, B, β, C)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+            @test cl.to_host(C_cl, queue=queue) ≈ C
+
+            @test_throws DimensionMismatch CLBlast.syr2k!(uplo, 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
+        end
+    end
+end
