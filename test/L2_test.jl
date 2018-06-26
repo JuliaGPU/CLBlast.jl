@@ -276,3 +276,27 @@ end
         @test_throws DimensionMismatch CLBlast.trsv!('U', 'N', 'N', A_cl, x_cl, queue=queue)
     end
 end
+
+@testset "ger!" begin 
+    for elty in elty_L1
+        A = rand(elty, m_L2, n_L2)
+        A_cl = cl.CLArray(queue, A)
+        x = rand(elty, m_L2)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, n_L2)
+        y_cl = cl.CLArray(queue, y)
+        α = rand(elty)
+
+        is_linux() && elty == Complex64 && continue
+
+        CLBlast.ger!(α, x_cl, y_cl, A_cl, queue=queue)
+        LinAlg.BLAS.ger!(α, x, y, A)
+        @test cl.to_host(A_cl, queue=queue) ≈ A
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        @test_throws DimensionMismatch CLBlast.ger!(α, x_cl, x_cl, A_cl, queue=queue)
+        @test_throws DimensionMismatch CLBlast.ger!(α, y_cl, y_cl, A_cl, queue=queue)
+        @test_throws DimensionMismatch CLBlast.ger!(α, y_cl, x_cl, A_cl, queue=queue)
+    end 
+end
