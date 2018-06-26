@@ -3,4 +3,4 @@ for error_code in keys(CLBlast._clblast_status_codes)
 end
 
 CLBlast.clear_cache()
-#CLBlast.fill_cache()
+CLBlast.fill_cache(device)

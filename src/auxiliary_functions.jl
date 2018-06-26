@@ -14,6 +14,11 @@ function clear_cache()
     return err
 end
 
-#function fill_cache(device::cl.CL_device_id)
-#    ccall((:CLBlastFillCache, libCLBlast), cl.CL_int, (cl.CL_device_id), device)
-#end
+function fill_cache(device::cl.Device)
+    err = ccall((:CLBlastFillCache, libCLBlast), cl.CL_int, (cl.CL_device_id,), pointer(device))
+    if err != cl.CL_SUCCESS
+        println(STDERR, "Calling function `fill_cache($device)` failed!")
+        throw(cl.CLError(err))
+    end
+    return err
+end
