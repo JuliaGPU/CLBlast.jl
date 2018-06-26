@@ -145,3 +145,37 @@ end
         @test_throws DimensionMismatch CLBlast.hbmv!('A', ku, α, A_cl, y_cl, β, x_cl, queue=queue)
     end 
 end
+
+@testset "symv!" begin 
+    for elty in elty_L1
+        elty <: Real || continue
+
+        A = rand(elty, n_L2, n_L2)
+        A_cl = cl.CLArray(queue, A)
+        x = rand(elty, n_L2)
+        x_cl = cl.CLArray(queue, x)
+        y = rand(elty, n_L2)
+        y_cl = cl.CLArray(queue, y)
+        α = rand(elty)
+        β = rand(elty)
+
+        CLBlast.symv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
+        LinAlg.BLAS.symv!('U', α, A, x, β, y)
+        @test cl.to_host(A_cl, queue=queue) ≈ A
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        CLBlast.symv!('L', α, A_cl, x_cl, β, y_cl, queue=queue)
+        LinAlg.BLAS.symv!('L', α, A, x, β, y)
+        @test cl.to_host(A_cl, queue=queue) ≈ A
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+
+        @test_throws ArgumentError CLBlast.symv!('A', α, A_cl, y_cl, β, x_cl, queue=queue)
+
+        y = rand(elty, m_L2)
+        y_cl = cl.CLArray(queue, y)
+        @test_throws DimensionMismatch CLBlast.symv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
+        @test_throws DimensionMismatch CLBlast.symv!('U', α, A_cl, y_cl, β, x_cl, queue=queue)
+    end 
+end
