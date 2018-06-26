@@ -1,13 +1,18 @@
 ## Documentation: http://docs.travis-ci.com/user/languages/julia/
 language: julia
-os:
-#  - linux
-  - osx
+
 julia:
   - 0.6
+  - 0.7
   - nightly
+
+os:
+  - linux
+  - osx
+
 notifications:
   email: false
+
 git:
   depth: 99999999
 
@@ -15,13 +20,24 @@ git:
 # (tests will run but not make your overall status red)
 matrix:
   allow_failures:
+  - julia: 0.7
   - julia: nightly
 
-## uncomment and modify the following lines to manually install system packages
-#addons:
-#  apt: # apt-get for linux
-#    packages:
-#    - gfortran
+# uncomment and modify the following lines to manually install system packages
+addons:
+  apt: # apt-get for linux
+    packages:
+    - clang
+    - libclang-dev
+    - llvm
+    - llvm-dev
+    - libltdl3-dev
+    - libhwloc-dev
+    - opencl-headers
+    - ocl-icd-dev
+    - ocl-icd-opencl-dev
+before_script: # pocl
+  - if [ $TRAVIS_OS_NAME = linux ]; then bash .travis_install_pocl.sh; fi
 #before_script: # homebrew for mac
 #  - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
 
