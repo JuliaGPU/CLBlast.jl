@@ -7,7 +7,7 @@ julia:
   - nightly
 
 os:
-  - linux
+#  - linux
   - osx
 
 notifications:
