@@ -13,6 +13,7 @@ end
 
 include("constants.jl")
 include("error.jl")
+include("auxiliary_functions.jl")
 
 include("L1/L1.jl")
 include("L2/L2.jl")

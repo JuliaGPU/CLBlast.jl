@@ -23,5 +23,6 @@ device, ctx, queue = cl.create_compute_context()
 @time @testset "BLAS Level 1" begin include("L1_test.jl") end
 @time @testset "BLAS Level 2" begin include("L2_test.jl") end
 @time @testset "BLAS Level 3" begin include("L3_test.jl") end
+@time @testset "Auxiliary Tests" begin include("auxiliary_test.jl") end
 
 end # module
