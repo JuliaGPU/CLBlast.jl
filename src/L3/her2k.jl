@@ -32,10 +32,10 @@ for (func, elty, relty) in [(:CLBlastCher2k, Complex64, Float32),
         # check and convert arguments
         if trans == 'N'
             ab_transpose = CLBlastTransposeNo
-        elseif trans == 'T'
-            ab_transpose = CLBlastTransposeYes
+        elseif trans == 'C'
+            ab_transpose = CLBlastTransposeConjugate
         else
-            throw(ArgumentError("Transpose marker `trans` is $(trans) but only 'N' and 'T' are allowed."))
+            throw(ArgumentError("Transpose marker `trans` is $(trans) but only 'N' and 'C' are allowed."))
         end
         if uplo == 'U'
             triangle = CLBlastTriangleUpper
