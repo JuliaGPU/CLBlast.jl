@@ -172,3 +172,55 @@ end
         end
     end
 end
+
+@testset "hemm!" begin 
+    for elty in elty_L1
+        is_linux() && elty == Complex64 && continue
+        elty <: Complex || continue
+
+        # multiply from the left
+        A = rand(elty, m_L3, m_L3)
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, m_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        C = rand(elty, m_L3, n_L3)
+        C_cl = cl.CLArray(queue, C)
+        α = rand(elty)
+        β = rand(elty)
+
+        for uplo in ['U','L']
+            CLBlast.hemm!('L', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
+            LinAlg.BLAS.hemm!('L', uplo, α, A, B, β, C)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+            @test cl.to_host(C_cl, queue=queue) ≈ C
+
+            @test_throws DimensionMismatch CLBlast.hemm!('L', uplo, α, B_cl, A_cl, β, C_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.hemm!('R', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
+        end
+
+        @test_throws ArgumentError CLBlast.hemm!('A', 'U', α, A_cl, B_cl, β, C_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.hemm!('U', 'A', α, A_cl, B_cl, β, C_cl, queue=queue)
+
+        # multiply from the right
+        A = rand(elty, n_L3, n_L3)
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, m_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        C = rand(elty, m_L3, n_L3)
+        C_cl = cl.CLArray(queue, C)
+        α = rand(elty)
+        β = rand(elty)
+
+        for uplo in ['U','L']
+            CLBlast.hemm!('R', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
+            LinAlg.BLAS.hemm!('R', uplo, α, A, B, β, C)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+            @test cl.to_host(C_cl, queue=queue) ≈ C
+
+            @test_throws DimensionMismatch CLBlast.hemm!('L', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.hemm!('R', uplo, α, B_cl, A_cl, β, C_cl, queue=queue)
+        end
+    end
+end
