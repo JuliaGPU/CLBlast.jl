@@ -27,7 +27,7 @@ for (func, elty) in [(:CLBlastSger, Float32), (:CLBlastDger, Float64),
 
     @eval function ger!(α::Number, x::cl.CLArray{$elty}, y::cl.CLArray{$elty},
                         A::cl.CLArray{$elty,2};
-                        queue::cl.CmdQueue=cl.queue(y))
+                        queue::cl.CmdQueue=cl.queue(A))
         # check and convert arguments
         m, n = size(A)
         if length(x) != m || length(y) != n
