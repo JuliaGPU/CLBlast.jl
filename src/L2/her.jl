@@ -56,7 +56,7 @@ for (func, elty, relty) in [(:CLBlastCher, Complex64, Float32), (:CLBlastZher, C
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        A
     end
 
 end

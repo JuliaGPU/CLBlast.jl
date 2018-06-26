@@ -82,7 +82,7 @@ for (func, elty) in [(:CLBlastStrsm, Float32), (:CLBlastDtrsm, Float64),
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        B
     end
 
 end

@@ -35,7 +35,7 @@ for (func, elty) in [(:CLBlastScopy, Float32), (:CLBlastDcopy, Float64),
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        y
     end
 
 end

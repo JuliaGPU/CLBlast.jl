@@ -62,7 +62,7 @@ for (func, elty) in [(:CLBlastChemv, Complex64), (:CLBlastZhemv, Complex128)]
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        y
     end
 
 end

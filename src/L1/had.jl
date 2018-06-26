@@ -43,7 +43,7 @@ for (func, elty) in [(:CLBlastShad, Float32), (:CLBlastDhad, Float64),
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        z
     end
 
 end

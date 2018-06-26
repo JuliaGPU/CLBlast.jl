@@ -75,7 +75,7 @@ for (func, elty) in [(:CLBlastSsymm, Float32), (:CLBlastDsymm, Float64),
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        C
     end
 
 end

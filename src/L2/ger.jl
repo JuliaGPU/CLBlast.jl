@@ -50,7 +50,7 @@ for (func, elty) in [(:CLBlastSger, Float32), (:CLBlastDger, Float64),
         # wait for kernel
         cl.wait(event)
 
-        nothing
+        A
     end
 
 end
