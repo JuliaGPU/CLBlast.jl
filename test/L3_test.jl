@@ -458,3 +458,53 @@ end
         end
     end
 end
+
+@testset "trsm!" begin 
+    @test_skip for elty in elty_L1
+        is_linux() && elty == Complex64 && continue
+
+        # multiply from the left
+        A = rand(elty, m_L3, m_L3)
+        for i in 1:n_L2
+            A[i,i] = i
+        end
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, m_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        α = rand(elty)
+
+        for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
+            CLBlast.trsm!('L', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+            LinAlg.BLAS.trsm!('L', uplo, transA, diag, α, A, B)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+
+            @test_throws DimensionMismatch CLBlast.trsm!('L', uplo, transA, diag, α, B_cl, A_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.trsm!('R', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+        end
+
+        @test_throws ArgumentError CLBlast.trsm!('A', 'U', 'N', 'N', α, A_cl, B_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.trsm!('U', 'A', 'N', 'N', α, A_cl, B_cl, queue=queue)
+
+        # multiply from the right
+        A = rand(elty, n_L3, n_L3)
+        for i in 1:n_L2
+            A[i,i] = i
+        end
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, m_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        α = rand(elty)
+        β = rand(elty)
+
+        for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
+            CLBlast.trsm!('R', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+            LinAlg.BLAS.trsm!('R', uplo, transA, diag, α, A, B)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+
+            @test_throws DimensionMismatch CLBlast.trsm!('L', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.trsm!('R', uplo, transA, diag, α, B_cl, A_cl, queue=queue)
+        end
+    end
+end
