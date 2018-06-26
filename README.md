@@ -7,9 +7,9 @@
 
 Wrapper of [CLBlast](https://github.com/CNugteren/CLBlast), a "tuned OpenCL BLAS library".
 This package has been inspired by [CLBLAS.jl](https://github.com/JuliaGPU/CLBLAS.jl) and
-the BLAS module of [Julia](https://github.com/JuliaLang/julia) is designed similarly.
+the BLAS module of [Julia](https://github.com/JuliaLang/julia) and is designed similarly.
 
 ## Current Status
 
-Work in progress. Some low-level bindings and high-level wrappers of BLAS level 1
+Work in progress. Most low-level bindings and high-level wrappers of BLAS level 1, 2, and 3
 routines are implemented.
