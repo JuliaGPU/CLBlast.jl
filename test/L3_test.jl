@@ -414,3 +414,47 @@ end
         end
     end
 end
+
+@testset "trmm!" begin 
+    for elty in elty_L1
+        is_linux() && elty == Complex64 && continue
+
+        # multiply from the left
+        A = rand(elty, m_L3, m_L3)
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, m_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        α = rand(elty)
+
+        for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
+            CLBlast.trmm!('L', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+            LinAlg.BLAS.trmm!('L', uplo, transA, diag, α, A, B)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+
+            @test_throws DimensionMismatch CLBlast.trmm!('L', uplo, transA, diag, α, B_cl, A_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.trmm!('R', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+        end
+
+        @test_throws ArgumentError CLBlast.trmm!('A', 'U', 'N', 'N', α, A_cl, B_cl, queue=queue)
+        @test_throws ArgumentError CLBlast.trmm!('U', 'A', 'N', 'N', α, A_cl, B_cl, queue=queue)
+
+        # multiply from the right
+        A = rand(elty, n_L3, n_L3)
+        A_cl = cl.CLArray(queue, A)
+        B = rand(elty, m_L3, n_L3)
+        B_cl = cl.CLArray(queue, B)
+        α = rand(elty)
+        β = rand(elty)
+
+        for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
+            CLBlast.trmm!('R', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+            LinAlg.BLAS.trmm!('R', uplo, transA, diag, α, A, B)
+            @test cl.to_host(A_cl, queue=queue) ≈ A
+            @test cl.to_host(B_cl, queue=queue) ≈ B
+
+            @test_throws DimensionMismatch CLBlast.trmm!('L', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
+            @test_throws DimensionMismatch CLBlast.trmm!('R', uplo, transA, diag, α, B_cl, A_cl, queue=queue)
+        end
+    end
+end

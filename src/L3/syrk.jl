@@ -28,7 +28,7 @@ for (func, elty) in [(:CLBlastSsyrk, Float32), (:CLBlastDsyrk, Float64),
 
     @eval function syrk!(uplo::Char, trans::Char, α::Number,
                          A::cl.CLArray{$elty,2}, β::Number, C::cl.CLArray{$elty,2};
-                         queue::cl.CmdQueue=cl.queue(y))
+                         queue::cl.CmdQueue=cl.queue(C))
         # check and convert arguments
         if trans == 'N'
             a_transpose = CLBlastTransposeNo

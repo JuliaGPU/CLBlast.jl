@@ -7,7 +7,7 @@
 
 Wrapper of [CLBlast](https://github.com/CNugteren/CLBlast), a "tuned OpenCL BLAS library".
 This package has been inspired by [CLBLAS.jl](https://github.com/JuliaGPU/CLBLAS.jl) and
-is designed similarly.
+the BLAS module of [Julia](https://github.com/JuliaLang/julia) is designed similarly.
 
 ## Current Status
 

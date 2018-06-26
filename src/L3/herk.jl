@@ -26,7 +26,7 @@ for (func, elty) in [(:CLBlastCherk, Complex64), (:CLBlastZherk, Complex128)]
 
     @eval function herk!(uplo::Char, trans::Char, α::Number,
                          A::cl.CLArray{$elty,2}, β::Number, C::cl.CLArray{$elty,2};
-                         queue::cl.CmdQueue=cl.queue(y))
+                         queue::cl.CmdQueue=cl.queue(C))
         # check and convert arguments
         if trans == 'N'
             a_transpose = CLBlastTransposeNo

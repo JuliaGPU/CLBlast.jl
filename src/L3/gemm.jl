@@ -29,7 +29,7 @@ for (func, elty) in [(:CLBlastSgemm, Float32), (:CLBlastDgemm, Float64),
 
     @eval function gemm!(transA::Char, transB::Char, α::Number, A::cl.CLArray{$elty,2},
                          B::cl.CLArray{$elty,2}, β::Number, C::cl.CLArray{$elty,2};
-                         queue::cl.CmdQueue=cl.queue(y))
+                         queue::cl.CmdQueue=cl.queue(C))
         # check and convert arguments
         if transA == 'N'
             a_transpose = CLBlastTransposeNo

@@ -27,7 +27,7 @@ for (func, elty) in [(:CLBlastChemm, Complex64), (:CLBlastZhemm, Complex128)]
 
     @eval function hemm!(_side::Char, uplo::Char, α::Number, A::cl.CLArray{$elty,2},
                          B::cl.CLArray{$elty,2}, β::Number, C::cl.CLArray{$elty,2};
-                         queue::cl.CmdQueue=cl.queue(y))
+                         queue::cl.CmdQueue=cl.queue(C))
         # check and convert arguments
         if _side == 'L'
             side = CLBlastSideLeft
