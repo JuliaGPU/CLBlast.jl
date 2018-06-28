@@ -2,8 +2,6 @@ srand(12345)
 
 @testset "gemm!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
-
         # A_mul_B!
         A = rand(elty, m_L3, k_L3)
         A_cl = cl.CLArray(queue, A)
@@ -124,8 +122,6 @@ end
 
 @testset "symm!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
-
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
         A_cl = cl.CLArray(queue, A)
@@ -175,7 +171,6 @@ end
 
 @testset "hemm!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
         elty <: Complex || continue
 
         # multiply from the left
@@ -227,8 +222,6 @@ end
 
 @testset "syrk!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
-
         # A*A'
         A = rand(elty, n_L3, k_L3)
         A_cl = cl.CLArray(queue, A)
@@ -272,7 +265,6 @@ end
 
 @testset "herk!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
         elty <: Complex || continue
 
         # A*A'
@@ -324,8 +316,6 @@ end
 
 @testset "syr2k!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
-
         # A*B'
         A = rand(elty, n_L3, k_L3)
         A_cl = cl.CLArray(queue, A)
@@ -373,7 +363,6 @@ end
 
 @testset "her2k!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
         elty <: Complex || continue
 
         # A*B'
@@ -431,8 +420,6 @@ end
 
 @testset "trmm!" begin 
     for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
-
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
         A_cl = cl.CLArray(queue, A)
@@ -475,8 +462,6 @@ end
 
 @testset "trsm!" begin 
     @test_skip for elty in elty_L1
-        is_linux() && elty == Complex64 && continue
-
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
         for i in 1:n_L2

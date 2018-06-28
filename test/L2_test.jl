@@ -11,8 +11,6 @@ srand(12345)
         α = rand(elty)
         β = rand(elty)
 
-        is_linux() && elty == Complex64 && continue
-
         @test_throws DimensionMismatch CLBlast.gemv!('T', α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.gemv!('C', α, A_cl, x_cl, β, y_cl, queue=queue)
         CLBlast.gemv!('N', α, A_cl, x_cl, β, y_cl, queue=queue)
@@ -50,8 +48,6 @@ end
         α = rand(elty)
         β = rand(elty)
 
-        is_linux() && elty == Complex64 && continue
-
         CLBlast.gbmv!('N', m_L2, kl, ku, α, A_cl, x_cl, β, y_cl, queue=queue)
         LinAlg.BLAS.gbmv!('N', m_L2, kl, ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
@@ -87,8 +83,6 @@ end
         α = rand(elty)
         β = rand(elty)
 
-        is_linux() && elty == Complex64 && continue
-
         CLBlast.hemv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
         LinAlg.BLAS.hemv!('U', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
@@ -122,8 +116,6 @@ end
         y_cl = cl.CLArray(queue, y)
         α = rand(elty)
         β = rand(elty)
-
-        is_linux() && elty == Complex64 && continue
 
         CLBlast.hbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
         LinAlg.BLAS.hbmv!('U', ku, α, A, x, β, y)
@@ -221,8 +213,6 @@ end
         x = rand(elty, n_L2)
         x_cl = cl.CLArray(queue, x)
 
-        is_linux() && elty == Complex64 && continue
-
         for uplo in ['U','L'], trans in ['N','T','C'], diag in ['N','U']
             CLBlast.trmv!(uplo, trans, diag, A_cl, x_cl, queue=queue)
             LinAlg.BLAS.trmv!(uplo, trans, diag, A, x)
@@ -253,8 +243,6 @@ end
         A_cl = cl.CLArray(queue, A)
         x = rand(elty, n_L2)
         x_cl = cl.CLArray(queue, x)
-
-        is_linux() && elty == Complex64 && continue
 
         for uplo in ['U','L'], trans in ['N','T','C'], diag in ['N','U']
             CLBlast.trsv!(uplo, trans, diag, A_cl, x_cl, queue=queue)
@@ -287,8 +275,6 @@ end
         y_cl = cl.CLArray(queue, y)
         α = rand(elty)
 
-        is_linux() && elty == Complex64 && continue
-
         CLBlast.ger!(α, x_cl, y_cl, A_cl, queue=queue)
         LinAlg.BLAS.ger!(α, x, y, A)
         @test cl.to_host(A_cl, queue=queue) ≈ A
@@ -310,8 +296,6 @@ end
         x = rand(elty, n_L2)
         x_cl = cl.CLArray(queue, x)
         α = real(rand(elty))
-
-        is_linux() && elty == Complex64 && continue
 
         for uplo in ['U', 'L']
             CLBlast.her!(uplo, α, x_cl, A_cl, queue=queue)
@@ -335,8 +319,6 @@ end
         x = rand(elty, n_L2)
         x_cl = cl.CLArray(queue, x)
         α = real(rand(elty))
-
-        is_linux() && elty == Complex64 && continue
 
         for uplo in ['U', 'L']
             CLBlast.syr!(uplo, α, x_cl, A_cl, queue=queue)

@@ -19,20 +19,12 @@ end
         α = rand(elty)
         CLBlast.scal!(length(x_cl), α, x_cl, 1, queue=queue)
         LinAlg.BLAS.scal!(length(x), α, x, 1)
-        if is_linux() && elty == Complex64
-            @test_broken cl.to_host(x_cl, queue=queue) ≈ x
-        else
-            @test cl.to_host(x_cl, queue=queue) ≈ x
-        end
+        @test cl.to_host(x_cl, queue=queue) ≈ x
 
         for α in (2, 2.f0, 2.0, 2+0im)
             CLBlast.scal!(length(x_cl), α, x_cl, 1, queue=queue)
             x .= α .* x
-            if is_linux() && elty == Complex64
-                @test_broken cl.to_host(x_cl, queue=queue) ≈ x
-            else
-                @test cl.to_host(x_cl, queue=queue) ≈ x
-            end
+            @test cl.to_host(x_cl, queue=queue) ≈ x
         end
     end
 end
@@ -56,14 +48,11 @@ end
         y = rand(elty, n_L1)
         y_cl = cl.CLArray(queue, y)
         α = rand(elty)
-        if is_linux() && elty == Complex64
-            @test_skip CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
-        else
-            CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
-            y .= α .* x .+ y
-            @test cl.to_host(x_cl, queue=queue) ≈ x
-            @test cl.to_host(y_cl, queue=queue) ≈ y
-        end
+        
+        CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
+        y .= α .* x .+ y
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
     end
 end
 
@@ -161,14 +150,11 @@ end
         z_cl = cl.CLArray(queue, z)
         α = rand(elty)
         β = rand(elty)
-        if is_linux() && elty == Complex64
-            @test_skip CLBlast.had!(length(x_cl), α, x_cl, 1, y_cl, 1, β, z_cl, 1, queue=queue)
-        else
-            CLBlast.had!(length(x_cl), α, x_cl, 1, y_cl, 1, β, z_cl, 1, queue=queue)
-            z .= α .* x .* y .+ β .* z
-            @test cl.to_host(x_cl, queue=queue) ≈ x
-            @test cl.to_host(y_cl, queue=queue) ≈ y
-            @test cl.to_host(z_cl, queue=queue) ≈ z
-        end
+        
+        CLBlast.had!(length(x_cl), α, x_cl, 1, y_cl, 1, β, z_cl, 1, queue=queue)
+        z .= α .* x .* y .+ β .* z
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y
+        @test cl.to_host(z_cl, queue=queue) ≈ z
     end 
 end
