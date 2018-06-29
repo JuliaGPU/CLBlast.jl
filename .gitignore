@@ -6,4 +6,4 @@ deps/deps.jl
 deps/downloads
 deps/package
 deps/CLBlast-1.4.0-Linux-x64
-deps/CLBlast
+deps/CLBlast-1.4.0

@@ -60,15 +60,13 @@ end
 if is_linux()
     # BinDeps.jl seems to be broken, cf. https://github.com/JuliaLang/BinDeps.jl/issues/172
     wd = pwd()
-    gitdir = joinpath(@__DIR__, "CLBlast")
-    builddir = joinpath(gitdir, "build")
+    sourcedir = joinpath(@__DIR__, "CLBlast-" * version)
+    builddir = joinpath(sourcedir, "build")
     libpath = joinpath(builddir, "libclblast.so")
-    if !isdir(gitdir)
-        run(`git clone https://github.com/CNugteren/CLBlast.git`)
+    if !isdir(sourcedir)
+        url = "https://github.com/CNugteren/CLBlast/archive/" * version * ".tar.gz"
+        run(pipeline(`wget -q -O - $url`, `tar xzf -`))
     end
-    cd(gitdir)
-    run(`git fetch origin`)
-    run(`git checkout 1.4.0`)
     isdir(builddir) || mkdir(builddir)
     cd(builddir)
     run(`cmake -DSAMPLES=OFF -DTESTS=OFF -DTUNERS=OFF -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..`)
@@ -84,7 +82,7 @@ end
 macro checked_lib(libname, path)
     if Libdl.dlopen_e(path) == C_NULL
         error("Unable to load \n\n\$libname (\$path)\n\nPlease ",
-              "re-run Pkg.build(package), and restart Julia.")
+              "re-run Pkg.build(CLBlast), and restart Julia.")
     end
     quote
         const \$(esc(libname)) = \$path
