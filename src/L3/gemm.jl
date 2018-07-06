@@ -61,7 +61,7 @@ for (func, elty) in [(:CLBlastSgemm, Float32), (:CLBlastDgemm, Float64),
         layout = CLBlastLayoutColMajor
 
         # output event
-        event::cl.event::cl.Event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, a_transpose, b_transpose,
               m, n, ka,
