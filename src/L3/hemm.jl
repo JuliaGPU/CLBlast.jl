@@ -11,11 +11,11 @@ for (func, elty) in [(:CLBlastChemm, Complex64), (:CLBlastZhemm, Complex128)]
                          c_buffer::cl.CL_mem, c_offset::Integer, c_ld::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, 
+            (Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
               Ptr{Void}, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
-            Cint(layout), Cint(side), Cint(triangle), m, n, alpha, a_buffer, a_offset, a_ld, 
+            Cint(layout), Cint(side), Cint(triangle), m, n, alpha, a_buffer, a_offset, a_ld,
               b_buffer, b_offset, b_ld, beta, c_buffer, c_offset, c_ld, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
@@ -59,7 +59,7 @@ for (func, elty) in [(:CLBlastChemm, Complex64), (:CLBlastZhemm, Complex128)]
         layout = CLBlastLayoutColMajor
 
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, side, triangle,
               m, n,

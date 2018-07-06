@@ -12,9 +12,9 @@ for (func, elty) in [(:CLBlastSgbmv, Float32), (:CLBlastDgbmv, Float64),
                          y_buffer::cl.CL_mem, y_offset::Integer, y_inc::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Csize_t, Csize_t, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, 
+            (Cint, Cint, Csize_t, Csize_t, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
               Ptr{Void}, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             Cint(layout), Cint(a_transpose), m, n, kl, ku, alpha, a_buffer, a_offset, a_ld,
               x_buffer, x_offset, x_inc, beta, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
@@ -26,8 +26,8 @@ for (func, elty) in [(:CLBlastSgbmv, Float32), (:CLBlastDgbmv, Float64),
         return err
     end
 
-    @eval function gbmv!(tA::Char, m::Integer, kl::Integer, ku::Integer, α::Number, 
-                         A::cl.CLArray{$elty,2}, x::cl.CLArray{$elty}, 
+    @eval function gbmv!(tA::Char, m::Integer, kl::Integer, ku::Integer, α::Number,
+                         A::cl.CLArray{$elty,2}, x::cl.CLArray{$elty},
                          β::Number, y::cl.CLArray{$elty};
                          queue::cl.CmdQueue=cl.queue(y))
         # check and convert arguments
@@ -45,7 +45,7 @@ for (func, elty) in [(:CLBlastSgbmv, Float32), (:CLBlastDgbmv, Float64),
         layout = CLBlastLayoutColMajor
 
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, a_transpose,
               m, size(A,2), kl, ku,

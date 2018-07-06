@@ -8,7 +8,7 @@ for (func, elty, relty) in [(:CLBlastCher, Complex64, Float32), (:CLBlastZher, C
                          a_buffer::cl.CL_mem, a_offset::Integer, a_ld::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
             (Cint, Cint, Csize_t, $relty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t,
               Ptr{Void}, Ptr{Void}),
@@ -44,7 +44,7 @@ for (func, elty, relty) in [(:CLBlastCher, Complex64, Float32), (:CLBlastZher, C
         layout = CLBlastLayoutColMajor
 
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, triangle,
               n,

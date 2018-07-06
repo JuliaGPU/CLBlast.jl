@@ -10,9 +10,9 @@ for (func, elty) in [(:CLBlastStrsm, Float32), (:CLBlastDtrsm, Float64),
                          b_buffer::cl.CL_mem, b_offset::Integer, b_ld::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, 
+            (Cint, Cint, Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
               Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             Cint(layout), Cint(side), Cint(triangle), Cint(a_transpose), Cint(diagonal),
               m, n, alpha, a_buffer, a_offset, a_ld, b_buffer, b_offset, b_ld, Ref(queue), Ref(event)
@@ -24,7 +24,7 @@ for (func, elty) in [(:CLBlastStrsm, Float32), (:CLBlastDtrsm, Float64),
         return err
     end
 
-    @eval function trsm!(_side::Char, uplo::Char, transA::Char, diag::Char, 
+    @eval function trsm!(_side::Char, uplo::Char, transA::Char, diag::Char,
                          α::Number, A::cl.CLArray{$elty,2}, B::cl.CLArray{$elty,2};
                          queue::cl.CmdQueue=cl.queue(B))
         # check and convert arguments
@@ -70,7 +70,7 @@ for (func, elty) in [(:CLBlastStrsm, Float32), (:CLBlastDtrsm, Float64),
         layout = CLBlastLayoutColMajor
 
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, side, triangle, a_transpose, diagonal,
               m, n,

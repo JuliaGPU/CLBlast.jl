@@ -7,7 +7,7 @@ for (func, elty) in [(:CLBlastSdot, Float32), (:CLBlastDdot, Float64)]
                          y_buffer::cl.CL_mem, y_offset::Integer, y_inc::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
             (Csize_t, Ptr{Void}, Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             n, out_buffer, out_offset, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
@@ -27,7 +27,7 @@ for (func, elty) in [(:CLBlastSdot, Float32), (:CLBlastDdot, Float64)]
         ctx = cl.context(queue)
         out = zeros($elty, 1)
         out_buffer = cl.Buffer($elty, ctx, (:rw, :copy), hostbuf=out)
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(Csize_t(n), pointer(out_buffer), Csize_t(0),
               pointer(x), Csize_t(0), Csize_t(x_inc),

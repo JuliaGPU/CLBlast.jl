@@ -8,7 +8,7 @@ for (func, elty) in [(:CLBlastSaxpy, Float32), (:CLBlastDaxpy, Float64),
                          y_buffer::cl.CL_mem, y_offset::Integer, y_inc::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
             (Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             n, alpha, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
@@ -25,7 +25,7 @@ for (func, elty) in [(:CLBlastSaxpy, Float32), (:CLBlastDaxpy, Float64),
                          y::cl.CLArray{$elty}, y_inc::Integer;
                          queue::cl.CmdQueue=cl.queue(x))
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
         alpha = convert($elty, α)
 
         $func(Csize_t(n), alpha,

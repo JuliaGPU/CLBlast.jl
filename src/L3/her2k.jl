@@ -12,9 +12,9 @@ for (func, elty, relty) in [(:CLBlastCher2k, Complex64, Float32),
                          c_buffer::cl.CL_mem, c_offset::Integer, c_ld::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, 
+            (Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
               Ptr{Void}, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             Cint(layout), Cint(triangle), Cint(ab_transpose), n, k, alpha,
               a_buffer, a_offset, a_ld, b_buffer, b_offset, b_ld, beta, c_buffer, c_offset, c_ld, Ref(queue), Ref(event)
@@ -49,11 +49,11 @@ for (func, elty, relty) in [(:CLBlastCher2k, Complex64, Float32),
             throw(DimensionMismatch("`C` has dimensions $(size(C)) but must be square."))
         end
         nn = size(A, trans == 'N' ? 1 : 2)
-        if nn != n 
-            throw(DimensionMismatch("`C` has size ($n,$n), corresponding dimension of `A` is $nn.")) 
+        if nn != n
+            throw(DimensionMismatch("`C` has size ($n,$n), corresponding dimension of `A` is $nn."))
         end
         if size(A) != size(B)
-            throw(DimensionMismatch("`A` has size $(size(A)), `B` has size $(size(B)).")) 
+            throw(DimensionMismatch("`A` has size $(size(A)), `B` has size $(size(B))."))
         end
         k  = size(A, trans == 'N' ? 2 : 1)
         alpha = convert($elty, α)
@@ -61,7 +61,7 @@ for (func, elty, relty) in [(:CLBlastCher2k, Complex64, Float32),
         layout = CLBlastLayoutColMajor
 
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, triangle, ab_transpose,
               n, k,

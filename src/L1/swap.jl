@@ -8,7 +8,7 @@ for (func, elty) in [(:CLBlastSswap, Float32), (:CLBlastDswap, Float64),
                          y_buffer::cl.CL_mem, y_offset::Integer, y_inc::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
             (Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
             n, x_buffer, x_offset, x_inc, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
@@ -20,12 +20,12 @@ for (func, elty) in [(:CLBlastSswap, Float32), (:CLBlastDswap, Float64),
         return err
     end
 
-    @eval function swap!(n::Integer, 
+    @eval function swap!(n::Integer,
                          x::cl.CLArray{$elty}, x_inc::Integer,
                          y::cl.CLArray{$elty}, y_inc::Integer;
                          queue::cl.CmdQueue=cl.queue(x))
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.Event = cl.Event(C_NULL)
 
         $func(Csize_t(n),
               pointer(x), Csize_t(0), Csize_t(x_inc),

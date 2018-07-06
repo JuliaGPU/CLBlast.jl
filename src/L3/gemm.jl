@@ -13,11 +13,11 @@ for (func, elty) in [(:CLBlastSgemm, Float32), (:CLBlastDgemm, Float64),
                          c_buffer::cl.CL_mem, c_offset::Integer, c_ld::Integer,
                          queue::cl.CmdQueue, event::cl.Event)
         err = ccall(
-            ($(string(func)), libCLBlast), 
+            ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Cint, Csize_t, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, 
+            (Cint, Cint, Cint, Csize_t, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
               Ptr{Void}, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
-            Cint(layout), Cint(a_transpose), Cint(b_transpose), m, n, k, alpha, a_buffer, a_offset, a_ld, 
+            Cint(layout), Cint(a_transpose), Cint(b_transpose), m, n, k, alpha, a_buffer, a_offset, a_ld,
               b_buffer, b_offset, b_ld, beta, c_buffer, c_offset, c_ld, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
@@ -61,7 +61,7 @@ for (func, elty) in [(:CLBlastSgemm, Float32), (:CLBlastDgemm, Float64),
         layout = CLBlastLayoutColMajor
 
         # output event
-        event = cl.Event(C_NULL)
+        event::cl.event::cl.Event = cl.Event(C_NULL)
 
         $func(layout, a_transpose, b_transpose,
               m, n, ka,
