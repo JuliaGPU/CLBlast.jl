@@ -1,7 +1,7 @@
 #import Base.LinAlg.BLAS: iamax
 
-for (func, elty) in [(:CLBlastiSamax, Float32), (:CLBlastiDamax, Float64),
-                     (:CLBlastiCamax, Complex64), (:CLBlastiZamax, Complex128)]
+@compat for (func, elty) in [(:CLBlastiSamax, Float32), (:CLBlastiDamax, Float64),
+                     (:CLBlastiCamax, ComplexF32), (:CLBlastiZamax, ComplexF64)]
     #TODO: (:CLBlastiHamax, Float16)
 
     @eval function $func(n::Integer, out_buffer::cl.CL_mem, out_offset::Integer,
@@ -14,7 +14,7 @@ for (func, elty) in [(:CLBlastiSamax, Float32), (:CLBlastiDamax, Float64),
             n, out_buffer, out_offset, x_buffer, x_offset, x_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string($func)) failed!")
+            println(stderr, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err

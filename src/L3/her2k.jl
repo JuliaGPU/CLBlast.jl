@@ -1,6 +1,6 @@
 
-for (func, elty, relty) in [(:CLBlastCher2k, Complex64, Float32),
-                            (:CLBlastZher2k, Complex128, Float64)]
+@compat for (func, elty, relty) in [(:CLBlastCher2k, ComplexF32, Float32),
+                            (:CLBlastZher2k, ComplexF64, Float64)]
 
     @eval function $func(layout::CLBlastLayout,
                          triangle::CLBlastTriangle, ab_transpose::CLBlastTranspose,
@@ -20,7 +20,7 @@ for (func, elty, relty) in [(:CLBlastCher2k, Complex64, Float32),
               a_buffer, a_offset, a_ld, b_buffer, b_offset, b_ld, beta, c_buffer, c_offset, c_ld, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string($func)) failed!")
+            println(stderr, "Calling function $(string($func)) failed!")
             throw(CLBlastError(err))
         end
         return err

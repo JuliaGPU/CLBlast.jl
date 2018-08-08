@@ -1,6 +1,6 @@
 
-for (func, elty) in [(:CLBlastSscal, Float32), (:CLBlastDscal, Float64),
-                     (:CLBlastCscal, Complex64), (:CLBlastZscal, Complex128)]
+@compat for (func, elty) in [(:CLBlastSscal, Float32), (:CLBlastDscal, Float64),
+                     (:CLBlastCscal, ComplexF32), (:CLBlastZscal, ComplexF64)]
     #TODO: (:CLBlastHscal, Float16)
 
     @eval function $func(n::Integer, alpha::$elty,
@@ -13,7 +13,7 @@ for (func, elty) in [(:CLBlastSscal, Float32), (:CLBlastDscal, Float64),
             n, alpha, x_buffer, x_offset, x_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string($func)) failed!")
+            println(stderr, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err

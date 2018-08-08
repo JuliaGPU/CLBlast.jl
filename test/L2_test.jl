@@ -1,6 +1,6 @@
-srand(12345)
+@compat Random.seed!(12345)
 
-@testset "gemv!" begin 
+@testset "gemv!" begin
     for elty in elty_L1
         A = rand(elty, m_L2, n_L2)
         A_cl = cl.CLArray(queue, A)
@@ -14,30 +14,30 @@ srand(12345)
         @test_throws DimensionMismatch CLBlast.gemv!('T', α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.gemv!('C', α, A_cl, x_cl, β, y_cl, queue=queue)
         CLBlast.gemv!('N', α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.gemv!('N', α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.gemv!('N', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         @test_throws DimensionMismatch CLBlast.gemv!('N', α, A_cl, y_cl, β, x_cl, queue=queue)
         CLBlast.gemv!('T', α, A_cl, y_cl, β, x_cl, queue=queue)
-        LinAlg.BLAS.gemv!('T', α, A, y, β, x)
+        Compat.LinearAlgebra.BLAS.gemv!('T', α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         @test_throws DimensionMismatch CLBlast.gemv!('N', α, A_cl, y_cl, β, x_cl, queue=queue)
         CLBlast.gemv!('C', α, A_cl, y_cl, β, x_cl, queue=queue)
-        LinAlg.BLAS.gemv!('C', α, A, y, β, x)
+        Compat.LinearAlgebra.BLAS.gemv!('C', α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         @test_throws ArgumentError CLBlast.gemv!('A', α, A_cl, y_cl, β, x_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "gbmv!" begin 
+@testset "gbmv!" begin
     for elty in elty_L1
         A = rand(elty, kl+ku+1, n_L2)
         A_cl = cl.CLArray(queue, A)
@@ -49,28 +49,28 @@ end
         β = rand(elty)
 
         CLBlast.gbmv!('N', m_L2, kl, ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.gbmv!('N', m_L2, kl, ku, α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.gbmv!('N', m_L2, kl, ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.gbmv!('T', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-        LinAlg.BLAS.gbmv!('T', m_L2, kl, ku, α, A, y, β, x)
+        Compat.LinearAlgebra.BLAS.gbmv!('T', m_L2, kl, ku, α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.gbmv!('C', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-        LinAlg.BLAS.gbmv!('C', m_L2, kl, ku, α, A, y, β, x)
+        Compat.LinearAlgebra.BLAS.gbmv!('C', m_L2, kl, ku, α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         @test_throws ArgumentError CLBlast.gbmv!('A', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "hemv!" begin 
+@testset "hemv!" begin
     for elty in elty_L1
         elty <: Complex || continue
 
@@ -84,13 +84,13 @@ end
         β = rand(elty)
 
         CLBlast.hemv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.hemv!('U', α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.hemv!('U', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.hemv!('L', α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.hemv!('L', α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.hemv!('L', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -101,10 +101,10 @@ end
         y_cl = cl.CLArray(queue, y)
         @test_throws DimensionMismatch CLBlast.hemv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.hemv!('U', α, A_cl, y_cl, β, x_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "hbmv!" begin 
+@testset "hbmv!" begin
     for elty in elty_L1
         elty <: Complex || continue
 
@@ -118,13 +118,13 @@ end
         β = rand(elty)
 
         CLBlast.hbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.hbmv!('U', ku, α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.hbmv!('U', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.hbmv!('L', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.hbmv!('L', ku, α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.hbmv!('L', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -135,10 +135,10 @@ end
         y_cl = cl.CLArray(queue, y)
         @test_throws DimensionMismatch CLBlast.hbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.hbmv!('U', ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "symv!" begin 
+@testset "symv!" begin
     for elty in elty_L1
         elty <: Real || continue
 
@@ -152,13 +152,13 @@ end
         β = rand(elty)
 
         CLBlast.symv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.symv!('U', α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.symv!('U', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.symv!('L', α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.symv!('L', α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.symv!('L', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -169,10 +169,10 @@ end
         y_cl = cl.CLArray(queue, y)
         @test_throws DimensionMismatch CLBlast.symv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.symv!('U', α, A_cl, y_cl, β, x_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "sbmv!" begin 
+@testset "sbmv!" begin
     for elty in elty_L1
         elty <: Real || continue
 
@@ -186,13 +186,13 @@ end
         β = rand(elty)
 
         CLBlast.sbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.sbmv!('U', ku, α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.sbmv!('U', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.sbmv!('L', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        LinAlg.BLAS.sbmv!('L', ku, α, A, x, β, y)
+        Compat.LinearAlgebra.BLAS.sbmv!('L', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -203,7 +203,7 @@ end
         y_cl = cl.CLArray(queue, y)
         @test_throws DimensionMismatch CLBlast.sbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.sbmv!('U', ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-    end 
+    end
 end
 
 @testset "trmv!" begin
@@ -215,7 +215,7 @@ end
 
         for uplo in ['U','L'], trans in ['N','T','C'], diag in ['N','U']
             CLBlast.trmv!(uplo, trans, diag, A_cl, x_cl, queue=queue)
-            LinAlg.BLAS.trmv!(uplo, trans, diag, A, x)
+            Compat.LinearAlgebra.BLAS.trmv!(uplo, trans, diag, A, x)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -246,7 +246,7 @@ end
 
         for uplo in ['U','L'], trans in ['N','T','C'], diag in ['N','U']
             CLBlast.trsv!(uplo, trans, diag, A_cl, x_cl, queue=queue)
-            LinAlg.BLAS.trsv!(uplo, trans, diag, A, x)
+            Compat.LinearAlgebra.BLAS.trsv!(uplo, trans, diag, A, x)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -265,7 +265,7 @@ end
     end
 end
 
-@testset "ger!" begin 
+@testset "ger!" begin
     for elty in elty_L1
         A = rand(elty, m_L2, n_L2)
         A_cl = cl.CLArray(queue, A)
@@ -276,7 +276,7 @@ end
         α = rand(elty)
 
         CLBlast.ger!(α, x_cl, y_cl, A_cl, queue=queue)
-        LinAlg.BLAS.ger!(α, x, y, A)
+        Compat.LinearAlgebra.BLAS.ger!(α, x, y, A)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -284,10 +284,10 @@ end
         @test_throws DimensionMismatch CLBlast.ger!(α, x_cl, x_cl, A_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.ger!(α, y_cl, y_cl, A_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.ger!(α, y_cl, x_cl, A_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "her!" begin 
+@testset "her!" begin
     for elty in elty_L1
         elty <: Complex || continue
 
@@ -299,7 +299,7 @@ end
 
         for uplo in ['U', 'L']
             CLBlast.her!(uplo, α, x_cl, A_cl, queue=queue)
-            LinAlg.BLAS.her!(uplo, α, x, A)
+            Compat.LinearAlgebra.BLAS.her!(uplo, α, x, A)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -307,10 +307,10 @@ end
         y = rand(elty, m_L2)
         y_cl = cl.CLArray(queue, y)
         @test_throws DimensionMismatch CLBlast.her!('U', α, y_cl, A_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "syr!" begin 
+@testset "syr!" begin
     for elty in elty_L1
         elty <: Real || continue
 
@@ -322,7 +322,7 @@ end
 
         for uplo in ['U', 'L']
             CLBlast.syr!(uplo, α, x_cl, A_cl, queue=queue)
-            LinAlg.BLAS.syr!(uplo, α, x, A)
+            Compat.LinearAlgebra.BLAS.syr!(uplo, α, x, A)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -330,5 +330,5 @@ end
         y = rand(elty, m_L2)
         y_cl = cl.CLArray(queue, y)
         @test_throws DimensionMismatch CLBlast.syr!('U', α, y_cl, A_cl, queue=queue)
-    end 
+    end
 end

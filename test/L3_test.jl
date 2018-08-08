@@ -1,6 +1,6 @@
-srand(12345)
+@compat Random.seed!(12345)
 
-@testset "gemm!" begin 
+@testset "gemm!" begin
     for elty in elty_L1
         # A_mul_B!
         A = rand(elty, m_L3, k_L3)
@@ -13,7 +13,7 @@ srand(12345)
         β = rand(elty)
 
         CLBlast.gemm!('N', 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('N', 'N', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('N', 'N', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -37,13 +37,13 @@ srand(12345)
         β = rand(elty)
 
         CLBlast.gemm!('T', 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('T', 'N', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('T', 'N', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
 
         CLBlast.gemm!('C', 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('C', 'N', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('C', 'N', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -63,13 +63,13 @@ srand(12345)
         β = rand(elty)
 
         CLBlast.gemm!('N', 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('N', 'T', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('N', 'T', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
 
         CLBlast.gemm!('N', 'C', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('N', 'C', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('N', 'C', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -89,25 +89,25 @@ srand(12345)
         β = rand(elty)
 
         CLBlast.gemm!('T', 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('T', 'T', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('T', 'T', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
 
         CLBlast.gemm!('C', 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('C', 'T', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('C', 'T', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
 
         CLBlast.gemm!('T', 'C', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('T', 'C', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('T', 'C', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
 
         CLBlast.gemm!('C', 'C', α, A_cl, B_cl, β, C_cl, queue=queue)
-        LinAlg.BLAS.gemm!('C', 'C', α, A, B, β, C)
+        Compat.LinearAlgebra.BLAS.gemm!('C', 'C', α, A, B, β, C)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(B_cl, queue=queue) ≈ B
         @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -117,10 +117,10 @@ srand(12345)
         @test_throws DimensionMismatch CLBlast.gemm!('C', 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.gemm!('N', 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.gemm!('N', 'C', α, A_cl, B_cl, β, C_cl, queue=queue)
-    end 
+    end
 end
 
-@testset "symm!" begin 
+@testset "symm!" begin
     for elty in elty_L1
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
@@ -134,7 +134,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.symm!('L', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.symm!('L', uplo, α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.symm!('L', uplo, α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -158,7 +158,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.symm!('R', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.symm!('R', uplo, α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.symm!('R', uplo, α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -169,7 +169,7 @@ end
     end
 end
 
-@testset "hemm!" begin 
+@testset "hemm!" begin
     for elty in elty_L1
         elty <: Complex || continue
 
@@ -185,7 +185,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.hemm!('L', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.hemm!('L', uplo, α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.hemm!('L', uplo, α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -209,7 +209,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.hemm!('R', uplo, α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.hemm!('R', uplo, α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.hemm!('R', uplo, α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -220,7 +220,7 @@ end
     end
 end
 
-@testset "syrk!" begin 
+@testset "syrk!" begin
     for elty in elty_L1
         # A*A'
         A = rand(elty, n_L3, k_L3)
@@ -232,7 +232,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.syrk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.syrk!(uplo, 'N', α, A, β, C)
+            Compat.LinearAlgebra.BLAS.syrk!(uplo, 'N', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(C_cl, queue=queue) ≈ C
 
@@ -252,7 +252,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.syrk!(uplo, 'T', α, A_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.syrk!(uplo, 'T', α, A, β, C)
+            Compat.LinearAlgebra.BLAS.syrk!(uplo, 'T', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(C_cl, queue=queue) ≈ C
 
@@ -263,7 +263,7 @@ end
     end
 end
 
-@testset "herk!" begin 
+@testset "herk!" begin
     for elty in elty_L1
         elty <: Complex || continue
 
@@ -280,7 +280,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.herk!(uplo, 'N', α, A_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.herk!(uplo, 'N', α, A, β, C)
+            Compat.LinearAlgebra.BLAS.herk!(uplo, 'N', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test_skip cl.to_host(C_cl, queue=queue) ≈ C
 
@@ -303,7 +303,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.herk!(uplo, 'C', α, A_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.herk!(uplo, 'C', α, A, β, C)
+            Compat.LinearAlgebra.BLAS.herk!(uplo, 'C', α, A, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test_skip cl.to_host(C_cl, queue=queue) ≈ C
 
@@ -314,7 +314,7 @@ end
     end
 end
 
-@testset "syr2k!" begin 
+@testset "syr2k!" begin
     for elty in elty_L1
         # A*B'
         A = rand(elty, n_L3, k_L3)
@@ -328,7 +328,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.syr2k!(uplo, 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.syr2k!(uplo, 'N', α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.syr2k!(uplo, 'N', α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -351,7 +351,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.syr2k!(uplo, 'T', α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.syr2k!(uplo, 'T', α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.syr2k!(uplo, 'T', α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test cl.to_host(C_cl, queue=queue) ≈ C
@@ -361,7 +361,7 @@ end
     end
 end
 
-@testset "her2k!" begin 
+@testset "her2k!" begin
     for elty in elty_L1
         elty <: Complex || continue
 
@@ -380,7 +380,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.her2k!(uplo, 'N', α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.her2k!(uplo, 'N', α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.her2k!(uplo, 'N', α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test_skip cl.to_host(C_cl, queue=queue) ≈ C
@@ -406,7 +406,7 @@ end
 
         for uplo in ['U','L']
             CLBlast.her2k!(uplo, 'C', α, A_cl, B_cl, β, C_cl, queue=queue)
-            LinAlg.BLAS.her2k!(uplo, 'C', α, A, B, β, C)
+            Compat.LinearAlgebra.BLAS.her2k!(uplo, 'C', α, A, B, β, C)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
             @test_skip cl.to_host(C_cl, queue=queue) ≈ C
@@ -418,7 +418,7 @@ end
     end
 end
 
-@testset "trmm!" begin 
+@testset "trmm!" begin
     for elty in elty_L1
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
@@ -429,7 +429,7 @@ end
 
         for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
             CLBlast.trmm!('L', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
-            LinAlg.BLAS.trmm!('L', uplo, transA, diag, α, A, B)
+            Compat.LinearAlgebra.BLAS.trmm!('L', uplo, transA, diag, α, A, B)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
 
@@ -450,7 +450,7 @@ end
 
         for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
             CLBlast.trmm!('R', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
-            LinAlg.BLAS.trmm!('R', uplo, transA, diag, α, A, B)
+            Compat.LinearAlgebra.BLAS.trmm!('R', uplo, transA, diag, α, A, B)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
 
@@ -460,7 +460,7 @@ end
     end
 end
 
-@testset "trsm!" begin 
+@testset "trsm!" begin
     @test_skip for elty in elty_L1
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
@@ -474,7 +474,7 @@ end
 
         for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
             CLBlast.trsm!('L', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
-            LinAlg.BLAS.trsm!('L', uplo, transA, diag, α, A, B)
+            Compat.LinearAlgebra.BLAS.trsm!('L', uplo, transA, diag, α, A, B)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
 
@@ -498,7 +498,7 @@ end
 
         for uplo in ['U','L'], transA in ['N','T','C'], diag in ['N','U']
             CLBlast.trsm!('R', uplo, transA, diag, α, A_cl, B_cl, queue=queue)
-            LinAlg.BLAS.trsm!('R', uplo, transA, diag, α, A, B)
+            Compat.LinearAlgebra.BLAS.trsm!('R', uplo, transA, diag, α, A, B)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(B_cl, queue=queue) ≈ B
 

@@ -1,7 +1,7 @@
 #import Base.LinAlg.BLAS: nrm2
 
-for (func, elty) in [(:CLBlastSnrm2, Float32), (:CLBlastDnrm2, Float64),
-                     (:CLBlastScnrm2, Complex64), (:CLBlastDznrm2, Complex128)]
+@compat for (func, elty) in [(:CLBlastSnrm2, Float32), (:CLBlastDnrm2, Float64),
+                     (:CLBlastScnrm2, ComplexF32), (:CLBlastDznrm2, ComplexF64)]
     #TODO: (:CLBlastHnrm2, Float16)
 
     @eval function $func(n::Integer, out_buffer::cl.CL_mem, out_offset::Integer,
@@ -14,7 +14,7 @@ for (func, elty) in [(:CLBlastSnrm2, Float32), (:CLBlastDnrm2, Float64),
             n, out_buffer, out_offset, x_buffer, x_offset, x_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string($func)) failed!")
+            println(stderr, "Calling function $(string($func)) failed!")
             throw(cl.CLError(err))
         end
         return err

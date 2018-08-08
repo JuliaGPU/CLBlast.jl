@@ -1,5 +1,5 @@
 
-for (func, elty) in [(:CLBlastSsymv, Float32), (:CLBlastDsymv, Float64)]
+@compat for (func, elty) in [(:CLBlastSsymv, Float32), (:CLBlastDsymv, Float64)]
     #TODO: (:CLBlastHsymv, Float16)
 
     @eval function $func(layout::CLBlastLayout, triangle::CLBlastTriangle,
@@ -19,7 +19,7 @@ for (func, elty) in [(:CLBlastSsymv, Float32), (:CLBlastDsymv, Float64)]
               beta, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
         )
         if err != cl.CL_SUCCESS
-            println(STDERR, "Calling function $(string($func)) failed!")
+            println(stderr, "Calling function $(string($func)) failed!")
             throw(CLBlastError(err))
         end
         return err
