@@ -10,8 +10,8 @@ for (func, elty, relty) in [(:CLBlastCher, Complex64, Float32), (:CLBlastZher, C
         err = ccall(
             ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Csize_t, $relty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Csize_t, Csize_t,
-              Ptr{Void}, Ptr{Void}),
+            (Cint, Cint, Csize_t, $relty, Ptr{Cvoid}, Csize_t, Csize_t, Ptr{Cvoid}, Csize_t, Csize_t,
+              Ptr{Cvoid}, Ptr{Cvoid}),
             Cint(layout), Cint(triangle), n, alpha, x_buffer, x_offset, x_inc,
                a_buffer, a_offset, a_ld, Ref(queue), Ref(event)
         )

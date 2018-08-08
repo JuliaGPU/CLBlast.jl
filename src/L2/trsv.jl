@@ -11,8 +11,8 @@ for (func, elty) in [(:CLBlastStrsv, Float32), (:CLBlastDtrsv, Float64),
         err = ccall(
             ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Cint, Cint, Csize_t, Ptr{Void}, Csize_t, Csize_t,
-              Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
+            (Cint, Cint, Cint, Cint, Csize_t, Ptr{Cvoid}, Csize_t, Csize_t,
+              Ptr{Cvoid}, Csize_t, Csize_t, Ptr{Cvoid}, Ptr{Cvoid}),
             Cint(layout), Cint(triangle), Cint(a_transpose), Cint(diagonal), n,
               a_buffer, a_offset, a_ld, x_buffer, x_offset, x_inc, Ref(queue), Ref(event)
         )

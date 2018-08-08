@@ -2,7 +2,8 @@ __precompile__(true)
 
 module CLBlast
 
-using OpenCL: cl
+using Compat
+using OpenCL.cl
 
 depsfile = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
 if isfile(depsfile)

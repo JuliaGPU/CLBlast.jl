@@ -14,8 +14,8 @@ for (func, elty) in [(:CLBlastSgbmv, Float32), (:CLBlastDgbmv, Float64),
         err = ccall(
             ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Csize_t, Csize_t, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
-              Ptr{Void}, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
+            (Cint, Cint, Csize_t, Csize_t, Csize_t, Csize_t, $elty, Ptr{Cvoid}, Csize_t, Csize_t,
+              Ptr{Cvoid}, Csize_t, Csize_t, $elty, Ptr{Cvoid}, Csize_t, Csize_t, Ptr{Cvoid}, Ptr{Cvoid}),
             Cint(layout), Cint(a_transpose), m, n, kl, ku, alpha, a_buffer, a_offset, a_ld,
               x_buffer, x_offset, x_inc, beta, y_buffer, y_offset, y_inc, Ref(queue), Ref(event)
         )

@@ -12,8 +12,8 @@ for (func, elty) in [(:CLBlastCherk, Complex64), (:CLBlastZherk, Complex128)]
         err = ccall(
             ($(string(func)), libCLBlast),
             cl.CL_int,
-            (Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Void}, Csize_t, Csize_t,
-              $elty, Ptr{Void}, Csize_t, Csize_t, Ptr{Void}, Ptr{Void}),
+            (Cint, Cint, Cint, Csize_t, Csize_t, $elty, Ptr{Cvoid}, Csize_t, Csize_t,
+              $elty, Ptr{Cvoid}, Csize_t, Csize_t, Ptr{Cvoid}, Ptr{Cvoid}),
             Cint(layout), Cint(triangle), Cint(a_transpose), n, k, alpha,
               a_buffer, a_offset, a_ld, beta, c_buffer, c_offset, c_ld, Ref(queue), Ref(event)
         )
