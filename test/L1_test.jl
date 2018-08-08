@@ -1,4 +1,4 @@
-@compat Random.seed!(12345)
+srand(12345)
 
 @testset "swap!" begin
     for elty in elty_L1
