@@ -4,12 +4,12 @@ using Compat
 @BinDeps.setup
 libnames = ["libCLBlast", "libclblast", "clblast"]
 libCLBlast = library_dependency("libCLBlast", aliases = libnames)
-version = "1.4.0"
+version = "1.4.1"
 
 if is_windows()
     if Sys.ARCH == :x86_64
-        uri = URI("https://github.com/CNugteren/CLBlast/releases/download/1.4.0/CLBlast-" * 
-                  version * "-Windows-x64.zip")
+        uri = URI("https://github.com/CNugteren/CLBlast/releases/download/" *
+                  version * "/CLBlast-" * version * "-Windows-x64.zip")
         basedir = @__DIR__
         provides(
             Binaries, uri,
@@ -34,21 +34,21 @@ if is_linux()
     else
         error("Only 64 bit linux supported with automatic build.")
     end=#
-    provides(Sources, URI("https://github.com/CNugteren/CLBlast/archive/1.4.0.tar.gz"), libCLBlast,
-             unpacked_dir="CLBlast-1.4.0")
+    provides(Sources, URI("https://github.com/CNugteren/CLBlast/archive/" * version * ".tar.gz"),
+             libCLBlast, unpacked_dir="CLBlast-" * version)
 
-    builddir = joinpath(@__DIR__, "src", "CLBlast-1.4.0", "build")
+    builddir = joinpath(@__DIR__, "src", "CLBlast-" * version, "build")
     libpath = joinpath(builddir, "libclblast.so")
     provides(BuildProcess,
         (@build_steps begin
             GetSources(libCLBlast)
             CreateDirectory(builddir)
-            FileRule(libpath, @build_steps begin   
+            FileRule(libpath, @build_steps begin
                 ChangeDirectory(builddir)
                 `cmake -DSAMPLES=OFF -DTESTS=OFF -DTUNERS=OFF -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ ..`
                 `make -j 4`
             end)
-        end), 
+        end),
         libCLBlast, installed_libpath=libpath, os=:Linux)
 end
 
