@@ -12,3 +12,37 @@ the BLAS module of [Julia](https://github.com/JuliaLang/julia) and is designed s
 ## Current Status
 
 Most low-level bindings and high-level wrappers of BLAS level 1, 2, and 3 routines are implemented.
+
+
+## Example
+
+```julia
+using CLBlast, OpenCL
+@static if VERSION < v"0.7-"
+    LA = LinAlg
+else
+    using Random, LinearAlgebra
+    LA = LinearAlgebra
+end
+
+device, context, queue = cl.create_compute_context()
+
+# setup data
+α = 1.f0
+β = 1.f0
+A = rand(Float32, 10, 8)
+B = rand(Float32, 8, 6)
+C = zeros(Float32, 10, 6)
+
+# transfer data
+A_cl = cl.CLArray(queue, A)
+B_cl = cl.CLArray(queue, B)
+C_cl = cl.CLArray(queue, C)
+
+# compute
+LA.BLAS.gemm!('N', 'N', α, A, B, β, C)
+CLBlast.gemm!('N', 'N', α, A_cl, B_cl, β, C_cl)
+
+# compare results
+@assert cl.to_host(C_cl) ≈ C
+```
