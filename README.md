@@ -11,5 +11,4 @@ the BLAS module of [Julia](https://github.com/JuliaLang/julia) and is designed s
 
 ## Current Status
 
-Work in progress. Most low-level bindings and high-level wrappers of BLAS level 1, 2, and 3
-routines are implemented.
+Most low-level bindings and high-level wrappers of BLAS level 1, 2, and 3 routines are implemented.
