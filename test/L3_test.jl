@@ -464,7 +464,7 @@ end
     @test_skip for elty in elty_L1
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
-        for i in 1:n_L2
+        for i in 1:m_L3
             A[i,i] = i
         end
         A_cl = cl.CLArray(queue, A)
@@ -487,7 +487,7 @@ end
 
         # multiply from the right
         A = rand(elty, n_L3, n_L3)
-        for i in 1:n_L2
+        for i in 1:n_L3
             A[i,i] = i
         end
         A_cl = cl.CLArray(queue, A)
