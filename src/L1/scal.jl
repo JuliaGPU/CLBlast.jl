@@ -36,4 +36,10 @@
         x
     end
 
+    @eval function scal!(α::Number,
+                         x::cl.CLArray{$elty};
+                         queue::cl.CmdQueue=cl.queue(x))
+        scal!(length(x), α, x, 1, queue=queue)
+    end
+
 end
