@@ -1,4 +1,8 @@
-srand(12345)
+@static if VERSION < v"0.7-"
+    srand(12345)
+else
+    Random.seed!(12345)
+end
 
 @testset "gemv!" begin
     for elty in elty_L1
