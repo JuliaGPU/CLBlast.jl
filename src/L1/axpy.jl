@@ -39,4 +39,16 @@
         y
     end
 
+    @eval function axpy!(α::Number,
+                         x::cl.CLArray{$elty},
+                         y::cl.CLArray{$elty};
+                         queue::cl.CmdQueue=cl.queue(x))
+        n = length(x)
+        if n != length(y)
+            throw(DimensionMismatch("x has length $n while y has length $(length(y))!"))
+        end
+
+        axpy!(n, α, x, 1, y, 1, queue=queue)
+    end
+
 end

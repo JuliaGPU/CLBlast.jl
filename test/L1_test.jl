@@ -54,9 +54,18 @@ end
         α = rand(elty)
 
         CLBlast.axpy!(length(x_cl), α, x_cl, 1, y_cl, 1, queue=queue)
-        y .= α .* x .+ y
+        y_true = α .* x .+ y
         @test cl.to_host(x_cl, queue=queue) ≈ x
-        @test cl.to_host(y_cl, queue=queue) ≈ y
+        @test cl.to_host(y_cl, queue=queue) ≈ y_true
+
+        x_cl = cl.CLArray(queue, x)
+        y_cl = cl.CLArray(queue, y)
+        CLBlast.axpy!(α, x_cl, y_cl, queue=queue)
+        @test cl.to_host(x_cl, queue=queue) ≈ x
+        @test cl.to_host(y_cl, queue=queue) ≈ y_true
+
+        x_cl = cl.CLArray(queue, x[1:n_L1-1])
+        @test_throws DimensionMismatch CLBlast.axpy!(α, x_cl, y_cl, queue=queue)
     end
 end
 
