@@ -5,7 +5,7 @@ else
 end
 
 @testset "gemv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         A = rand(elty, m_L2, n_L2)
         A_cl = cl.CLArray(queue, A)
         x = rand(elty, n_L2)
@@ -42,7 +42,7 @@ end
 end
 
 @testset "gbmv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         A = rand(elty, kl+ku+1, n_L2)
         A_cl = cl.CLArray(queue, A)
         x = rand(elty, n_L2)
@@ -75,7 +75,7 @@ end
 end
 
 @testset "hemv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
 
         A = rand(elty, n_L2, n_L2)
@@ -109,7 +109,7 @@ end
 end
 
 @testset "hbmv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
 
         A = rand(elty, ku+1, n_L2)
@@ -143,7 +143,7 @@ end
 end
 
 @testset "symv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Real || continue
 
         A = rand(elty, n_L2, n_L2)
@@ -177,7 +177,7 @@ end
 end
 
 @testset "sbmv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Real || continue
 
         A = rand(elty, ku+1, n_L2)
@@ -211,7 +211,7 @@ end
 end
 
 @testset "trmv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         A = rand(elty, n_L2, n_L2)
         A_cl = cl.CLArray(queue, A)
         x = rand(elty, n_L2)
@@ -239,7 +239,7 @@ end
 end
 
 @testset "trsv!" begin
-    for elty in elty_L1
+    for elty in eltypes
         A = rand(elty, n_L2, n_L2)
         for i in 1:n_L2
             A[i,i] = i
@@ -270,7 +270,7 @@ end
 end
 
 @testset "ger!" begin
-    for elty in elty_L1
+    for elty in eltypes
         A = rand(elty, m_L2, n_L2)
         A_cl = cl.CLArray(queue, A)
         x = rand(elty, m_L2)
@@ -292,7 +292,7 @@ end
 end
 
 @testset "her!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
 
         A = rand(elty, n_L2, n_L2)
@@ -315,7 +315,7 @@ end
 end
 
 @testset "syr!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Real || continue
 
         A = rand(elty, n_L2, n_L2)

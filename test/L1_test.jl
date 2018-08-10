@@ -5,7 +5,7 @@ else
 end
 
 @testset "swap!" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)
@@ -17,7 +17,7 @@ end
 end
 
 @testset "scal!" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         y_cl = cl.CLArray(queue, x)
@@ -38,7 +38,7 @@ end
 end
 
 @testset "copy!" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)
@@ -50,7 +50,7 @@ end
 end
 
 @testset "axpy!" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)
@@ -74,7 +74,7 @@ end
 end
 
 @testset "dot" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Real || continue
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
@@ -85,7 +85,7 @@ end
 end
 
 @testset "dotu" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
@@ -96,7 +96,7 @@ end
 end
 
 @testset "dotc" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
@@ -107,7 +107,7 @@ end
 end
 
 @testset "nrm2" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         @test Compat.LinearAlgebra.BLAS.nrm2(length(x), x, 1) ≈ CLBlast.nrm2(length(x_cl), x_cl, 1, queue=queue)
@@ -115,7 +115,7 @@ end
 end
 
 @testset "asum" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         @test Compat.LinearAlgebra.BLAS.asum(length(x), x, 1) ≈ CLBlast.asum(length(x_cl), x_cl, 1, queue=queue)
@@ -123,7 +123,7 @@ end
 end
 
 @testset "sum" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         sumx = sum(x)
@@ -133,7 +133,7 @@ end
 
 _internalnorm(z) = abs(real(z)) + abs(imag(z))
 @testset "iamax" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
@@ -148,7 +148,7 @@ _internalnorm(z) = abs(real(z)) + abs(imag(z))
 end
 
 @testset "iamin" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
@@ -158,7 +158,7 @@ end
 end
 
 @testset "had!" begin
-    for elty in elty_L1
+    for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)

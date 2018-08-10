@@ -14,7 +14,7 @@ const ku = 3
 const m_L3 = 6
 const n_L3 = 5
 const k_L3 = 4
-@compat const elty_L1 = (Float32, Float64, ComplexF32, ComplexF64)
+@compat const eltypes = (Float32, Float64, ComplexF32, ComplexF64)
 
 device, ctx, queue = cl.create_compute_context()
 
