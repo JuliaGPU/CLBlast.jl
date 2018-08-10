@@ -461,7 +461,7 @@ end
 end
 
 @testset "trsm!" begin
-    @test_skip for elty in elty_L1
+    for elty in elty_L1
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
         for i in 1:m_L3

@@ -69,7 +69,10 @@
               queue, event)
 
         # wait for kernel
-        cl.wait(event)
+        # the additional check is due to https://github.com/CNugteren/CLBlast/issues/311
+        if event != cl.Event(C_NULL)
+            cl.wait(event)
+        end
 
         x
     end

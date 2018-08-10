@@ -235,7 +235,7 @@ end
 end
 
 @testset "trsv!" begin
-    @test_skip for elty in elty_L1
+    for elty in elty_L1
         A = rand(elty, n_L2, n_L2)
         for i in 1:n_L2
             A[i,i] = i
