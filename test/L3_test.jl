@@ -5,7 +5,7 @@ else
 end
 
 @testset "gemm!" begin
-    for elty in elty_L1
+    for elty in eltypes
         # A_mul_B!
         A = rand(elty, m_L3, k_L3)
         A_cl = cl.CLArray(queue, A)
@@ -125,7 +125,7 @@ end
 end
 
 @testset "symm!" begin
-    for elty in elty_L1
+    for elty in eltypes
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
         A_cl = cl.CLArray(queue, A)
@@ -174,7 +174,7 @@ end
 end
 
 @testset "hemm!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
 
         # multiply from the left
@@ -225,7 +225,7 @@ end
 end
 
 @testset "syrk!" begin
-    for elty in elty_L1
+    for elty in eltypes
         # A*A'
         A = rand(elty, n_L3, k_L3)
         A_cl = cl.CLArray(queue, A)
@@ -268,7 +268,7 @@ end
 end
 
 @testset "herk!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
 
         # A*A'
@@ -319,7 +319,7 @@ end
 end
 
 @testset "syr2k!" begin
-    for elty in elty_L1
+    for elty in eltypes
         # A*B'
         A = rand(elty, n_L3, k_L3)
         A_cl = cl.CLArray(queue, A)
@@ -366,7 +366,7 @@ end
 end
 
 @testset "her2k!" begin
-    for elty in elty_L1
+    for elty in eltypes
         elty <: Complex || continue
 
         # A*B'
@@ -423,7 +423,7 @@ end
 end
 
 @testset "trmm!" begin
-    for elty in elty_L1
+    for elty in eltypes
         # multiply from the left
         A = rand(elty, m_L3, m_L3)
         A_cl = cl.CLArray(queue, A)
@@ -465,7 +465,7 @@ end
 end
 
 @testset "trsm!" begin
-    for elty in elty_L1
+    for elty in eltypes
         # On Travis, there is some strange error
         # https://travis-ci.org/JuliaGPU/CLBlast.jl/jobs/414395954#L347
         @static if VERSION < v"0.7-"
