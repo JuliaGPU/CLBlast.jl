@@ -1,4 +1,10 @@
 using OpenCL, CLBLAS, CLBlast, BenchmarkTools
+@static if VERSION < v"0.7-"
+    LA = Base.LinAlg
+else
+    using LinearAlgebra, Random, Printf
+    LA = LinearAlgebra
+end
 
 CLBLAS.setup()
 

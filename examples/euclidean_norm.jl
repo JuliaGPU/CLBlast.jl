@@ -1,4 +1,10 @@
 using OpenCL, CLBLAS, CLBlast, BenchmarkTools
+@static if VERSION < v"0.7-"
+    LA = Base.LinAlg
+else
+    using LinearAlgebra, Random, Printf
+    LA = LinearAlgebra
+end
 
 CLBLAS.setup()
 
@@ -9,8 +15,8 @@ function run_nrm2(n::Integer, T=Float32::Union{Type{Float32},Type{Float64}})
     @printf("\nn = %d, eltype = %s\n", n, T)
 
     println("BLAS:")
-    res_true = LinAlg.BLAS.nrm2(n, x, 1)
-    display(@benchmark LinAlg.BLAS.nrm2($n, $x, $1))
+    res_true = LA.BLAS.nrm2(n, x, 1)
+    display(@benchmark LA.BLAS.nrm2($n, $x, $1))
     println()
 
     for device in cl.devices()
