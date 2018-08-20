@@ -6,7 +6,7 @@ libnames = ["libCLBlast", "libclblast", "clblast"]
 libCLBlast = library_dependency("libCLBlast", aliases = libnames)
 version = "1.4.1"
 
-if is_windows()
+if Compat.Sys.iswindows()
     if Sys.ARCH == :x86_64
         uri = URI("https://github.com/CNugteren/CLBlast/releases/download/" *
                   version * "/CLBlast-" * version * "-Windows-x64.zip")
@@ -21,7 +21,7 @@ if is_windows()
     end
 end
 
-if is_linux()
+if Compat.Sys.islinux()
     #=if Sys.ARCH == :x86_64
         name, ext = splitext(splitext(basename(baseurl * "Linux-x64.tar.gz"))[1])
         uri = URI(baseurl * "Linux-x64.tar.gz")
@@ -52,12 +52,12 @@ if is_linux()
         libCLBlast, installed_libpath=libpath, os=:Linux)
 end
 
-if is_apple()
+if Compat.Sys.isapple()
     using Homebrew
     provides(Homebrew.HB, "homebrew/core/clblast", libCLBlast, os = :Darwin)
 end
 
-if is_linux()
+if Compat.Sys.islinux()
     # BinDeps.jl seems to be broken, cf. https://github.com/JuliaLang/BinDeps.jl/issues/172
     wd = pwd()
     sourcedir = joinpath(@__DIR__, "CLBlast-" * version)
