@@ -6,7 +6,7 @@ stages:
   #- postprocess
 
 before_script:
-  - apt-get update && apt-get install -y cmake clang
+  - apt-get update && apt-get install -y cmake clang libclblas-dev
 
 include:
   - 'https://raw.githubusercontent.com/JuliaGPU/gitlab-ci/master/templates/v0/common.yml'
