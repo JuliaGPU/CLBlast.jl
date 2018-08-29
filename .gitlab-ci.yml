@@ -26,6 +26,7 @@ test:v0.6:
                 symlink(\"$CI_PROJECT_DIR\", Pkg.dir(\"$package\"));
                 Pkg.resolve();
                 Pkg.build(\"$package\");
+                Pkg.test("OpenCL");
                 Pkg.test(\"$package\")"
 
 test:v1.0:
