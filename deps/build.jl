@@ -65,7 +65,21 @@ if Compat.Sys.islinux()
     libpath = joinpath(builddir, "libclblast.so")
     if !isdir(sourcedir)
         url = "https://github.com/CNugteren/CLBlast/archive/" * version * ".tar.gz"
-        run(pipeline(`wget -q -O - $url`, `tar xzf -`))
+        download_finished = false
+        try
+            run(pipeline(`wget -q -O - $url`, `tar xzf -`))
+            global download_finished = true
+        catch e
+            println(e)
+        end
+        if download_finished == false
+            try
+                run(pipeline(`curl -L $url`, `tar xzf -`))
+                global download_finished = true
+            catch e
+                println(e)
+            end
+        end
     end
     isdir(builddir) || mkdir(builddir)
     cd(builddir)
