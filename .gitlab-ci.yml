@@ -7,7 +7,7 @@ stages:
   #- postprocess
 
 before_script:
-  - apt-get update && apt-get install -y cmake clang libclblas-dev
+  - apt-get update && apt-get install -y cmake clang
 
 include:
   - 'https://raw.githubusercontent.com/JuliaGPU/gitlab-ci/master/templates/v0/common.yml'
@@ -22,11 +22,11 @@ test:v0.6:
   image: "juliagpu/julia:v0.6-${CI_IMAGE_TAG}"
   script:
     - julia -e 'versioninfo()'
-    - julia -e 'Pkg.init();
-                symlink("$CI_PROJECT_DIR", Pkg.dir("$package"));
+    - julia -e "Pkg.init();
+                symlink(\"$CI_PROJECT_DIR\", Pkg.dir(\"$package\"));
                 Pkg.resolve();
-                Pkg.build("$package");
-                Pkg.test("$package")'
+                Pkg.build(\"$package\");
+                Pkg.test(\"$package\")"
 
 test:v1.0:
   allow_failure: true
