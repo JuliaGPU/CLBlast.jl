@@ -1,5 +1,6 @@
 variables:
   CI_IMAGE_TAG: 'opencl'
+  package: 'CLBlast'
 
 stages:
   - test
@@ -15,6 +16,17 @@ include:
   - 'https://raw.githubusercontent.com/JuliaGPU/gitlab-ci/master/templates/v0/test_dev.yml'
   #- 'https://raw.githubusercontent.com/JuliaGPU/gitlab-ci/master/templates/v0/postprocess_coverage.yml'
   #- 'https://raw.githubusercontent.com/JuliaGPU/gitlab-ci/master/templates/v0/postprocess_documentation.yml'
+
+test:v0.6:
+  stage: test
+  image: "juliagpu/julia:v0.6-${CI_IMAGE_TAG}"
+  script:
+    - julia -e 'versioninfo()'
+    - julia -e 'Pkg.init();
+                symlink("$CI_PROJECT_DIR", Pkg.dir("$package"));
+                Pkg.resolve();
+                Pkg.build("$package");
+                Pkg.test("$package")'
 
 test:v1.0:
   allow_failure: true
