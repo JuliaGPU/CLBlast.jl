@@ -3,7 +3,7 @@ variables:
 
 stages:
   - test
-  - postprocess
+  #- postprocess
 
 include:
   - 'https://raw.githubusercontent.com/JuliaGPU/gitlab-ci/master/templates/v0/common.yml'
