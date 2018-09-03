@@ -1,5 +1,6 @@
 # CLBlast
 
+[![Build Status](https://gitlab.com/JuliaGPU/CLArrays.jl/badges/master/pipeline.svg)](https://gitlab.com/JuliaGPU/CLArrays.jl/pipelines)
 [![Build Status](https://travis-ci.org/JuliaGPU/CLBlast.jl.svg?branch=master)](https://travis-ci.org/JuliaGPU/CLBlast.jl)
 [![Build status](https://ci.appveyor.com/api/projects/status/i1saoodeqrepiodl?svg=true)](https://ci.appveyor.com/project/ranocha/CLBlast-jl)
 [![Coverage Status](https://coveralls.io/repos/github/JuliaGPU/CLBlast.jl/badge.svg?branch=master)](https://coveralls.io/github/JuliaGPU/CLBlast.jl?branch=master)
