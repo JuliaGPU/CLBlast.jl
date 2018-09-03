@@ -47,3 +47,19 @@ CLBlast.gemm!('N', 'N', α, A_cl, B_cl, β, C_cl)
 # compare results
 @assert cl.to_host(C_cl) ≈ C
 ```
+
+
+## Installation
+
+Since this package is registered, you can add it using `]` (activate package mode) and
+```julia
+(v0.7) pkg> add CLBlast
+```
+on Julia `v0.7` or newer and using
+```julia
+julia> Pkg.add("CLBlast")
+```
+on Julia `v0.6`. During the build process, a suitable version of CLBlast will be
+downloaded and build. On Linux, you have to install `clang`, since the available
+binaries of CLBlast will fail to work with complex numbers from Julia.
+
