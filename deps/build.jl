@@ -4,7 +4,7 @@ using Compat
 @BinDeps.setup
 libnames = ["libCLBlast", "libclblast", "clblast"]
 libCLBlast = library_dependency("libCLBlast", aliases = libnames)
-version = "1.4.1"
+version = "1.5.0"
 
 if Compat.Sys.iswindows()
     if Sys.ARCH == :x86_64
