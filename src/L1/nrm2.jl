@@ -1,6 +1,6 @@
 #import Base.LinAlg.BLAS: nrm2
 
-@compat for (func, elty) in [(:CLBlastSnrm2, Float32), (:CLBlastDnrm2, Float64),
+for (func, elty) in [(:CLBlastSnrm2, Float32), (:CLBlastDnrm2, Float64),
                      (:CLBlastScnrm2, ComplexF32), (:CLBlastDznrm2, ComplexF64)]
     #TODO: (:CLBlastHnrm2, Float16)
 

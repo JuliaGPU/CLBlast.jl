@@ -23,7 +23,7 @@ end
         y_cl = cl.CLArray(queue, x)
         α = rand(elty)
         CLBlast.scal!(length(x_cl), α, x_cl, 1, queue=queue)
-        Compat.LinearAlgebra.BLAS.scal!(length(x), α, x, 1)
+        LinearAlgebra.BLAS.scal!(length(x), α, x, 1)
         @test cl.to_host(x_cl, queue=queue) ≈ x
 
         CLBlast.scal!(α, y_cl, queue=queue)
@@ -80,7 +80,7 @@ end
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)
         y_cl = cl.CLArray(queue, y)
-        @test Compat.LinearAlgebra.BLAS.dot(length(x), x, 1, y, 1) ≈ CLBlast.dot(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
+        @test LinearAlgebra.BLAS.dot(length(x), x, 1, y, 1) ≈ CLBlast.dot(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
     end
 end
 
@@ -91,7 +91,7 @@ end
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)
         y_cl = cl.CLArray(queue, y)
-        @test Compat.LinearAlgebra.BLAS.dotu(length(x), x, 1, y, 1) ≈ CLBlast.dotu(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
+        @test LinearAlgebra.BLAS.dotu(length(x), x, 1, y, 1) ≈ CLBlast.dotu(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
     end
 end
 
@@ -102,7 +102,7 @@ end
         x_cl = cl.CLArray(queue, x)
         y = rand(elty, n_L1)
         y_cl = cl.CLArray(queue, y)
-        @test Compat.LinearAlgebra.BLAS.dotc(length(x), x, 1, y, 1) ≈ CLBlast.dotc(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
+        @test LinearAlgebra.BLAS.dotc(length(x), x, 1, y, 1) ≈ CLBlast.dotc(length(x_cl), x_cl, 1, y_cl, 1, queue=queue)
     end
 end
 
@@ -110,7 +110,7 @@ end
     for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
-        @test Compat.LinearAlgebra.BLAS.nrm2(length(x), x, 1) ≈ CLBlast.nrm2(length(x_cl), x_cl, 1, queue=queue)
+        @test LinearAlgebra.BLAS.nrm2(length(x), x, 1) ≈ CLBlast.nrm2(length(x_cl), x_cl, 1, queue=queue)
     end
 end
 
@@ -118,7 +118,7 @@ end
     for elty in eltypes
         x = rand(elty, n_L1)
         x_cl = cl.CLArray(queue, x)
-        @test Compat.LinearAlgebra.BLAS.asum(length(x), x, 1) ≈ CLBlast.asum(length(x_cl), x_cl, 1, queue=queue)
+        @test LinearAlgebra.BLAS.asum(length(x), x, 1) ≈ CLBlast.asum(length(x_cl), x_cl, 1, queue=queue)
     end
 end
 
@@ -138,7 +138,7 @@ _internalnorm(z) = abs(real(z)) + abs(imag(z))
         x_cl = cl.CLArray(queue, x)
         #NOTE: +1 due to zero based indexing in OpenCL vs. 1 based indexing in Julia
         idx_CLBlast = CLBlast.iamax(length(x_cl), x_cl, 1, queue=queue) + 1
-        idx_BLAS = Compat.LinearAlgebra.BLAS.iamax(length(x), x, 1)
+        idx_BLAS = LinearAlgebra.BLAS.iamax(length(x), x, 1)
         if elty <: Real
             @test _internalnorm(x[idx_BLAS]) ≈ _internalnorm(x[idx_CLBlast])
         else

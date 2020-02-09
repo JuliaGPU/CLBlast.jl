@@ -1,8 +1,8 @@
 module TestCLBlast
 
-using Compat
-using Compat.Test
-using Compat.Random
+using Test
+using Random
+using LinearAlgebra
 
 using CLBlast, OpenCL
 
@@ -14,7 +14,7 @@ const ku = 3
 const m_L3 = 6
 const n_L3 = 5
 const k_L3 = 4
-@compat const eltypes = (Float32, Float64, ComplexF32, ComplexF64)
+const eltypes = (Float32, Float64, ComplexF32, ComplexF64)
 
 device, ctx, queue = cl.create_compute_context()
 

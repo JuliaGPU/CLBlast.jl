@@ -1,5 +1,5 @@
 
-@compat for (func, elty) in [(:CLBlastSsbmv, Float32), (:CLBlastDsbmv, Float64)]
+for (func, elty) in [(:CLBlastSsbmv, Float32), (:CLBlastDsbmv, Float64)]
     #TODO: (:CLBlastHsbmv, Float16)
 
     @eval function $func(layout::CLBlastLayout, triangle::CLBlastTriangle,

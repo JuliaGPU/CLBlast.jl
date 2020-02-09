@@ -1,5 +1,5 @@
 
-@compat for (func, elty) in [(:CLBlastCdotc, ComplexF32), (:CLBlastZdotc, ComplexF64)]
+for (func, elty) in [(:CLBlastCdotc, ComplexF32), (:CLBlastZdotc, ComplexF64)]
 
     @eval function $func(n::Integer, out_buffer::cl.CL_mem, out_offset::Integer,
                          x_buffer::cl.CL_mem, x_offset::Integer, x_inc::Integer,

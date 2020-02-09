@@ -1,5 +1,5 @@
 
-@compat for (func, elty) in [(:CLBlastSdot, Float32), (:CLBlastDdot, Float64)]
+for (func, elty) in [(:CLBlastSdot, Float32), (:CLBlastDdot, Float64)]
     #TODO: (:CLBlastHdot, Float16)
 
     @eval function $func(n::Integer, out_buffer::cl.CL_mem, out_offset::Integer,

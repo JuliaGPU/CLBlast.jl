@@ -1,5 +1,5 @@
 
-@compat for (func, elty) in [(:CLBlastSsyr2k, Float32), (:CLBlastDsyr2k, Float64),
+for (func, elty) in [(:CLBlastSsyr2k, Float32), (:CLBlastDsyr2k, Float64),
                      (:CLBlastCsyr2k, ComplexF32), (:CLBlastZsyr2k, ComplexF64)]
     #TODO: (:CLBlastHsyr2k, Float16)
 

@@ -1,5 +1,5 @@
 
-@compat for (func, elty) in [(:CLBlastSaxpy, Float32), (:CLBlastDaxpy, Float64),
+for (func, elty) in [(:CLBlastSaxpy, Float32), (:CLBlastDaxpy, Float64),
                      (:CLBlastCaxpy, ComplexF32), (:CLBlastZaxpy, ComplexF64)]
     #TODO: (:CLBlastHaxpy, Float16)
 
