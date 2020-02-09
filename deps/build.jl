@@ -1,12 +1,11 @@
 using BinDeps
-using Compat
 
 @BinDeps.setup
 libnames = ["libCLBlast", "libclblast", "clblast"]
 libCLBlast = library_dependency("libCLBlast", aliases = libnames)
 version = "1.5.0"
 
-if Compat.Sys.iswindows()
+if Sys.iswindows()
     if Sys.ARCH == :x86_64
         uri = URI("https://github.com/CNugteren/CLBlast/releases/download/" *
                   version * "/CLBlast-" * version * "-Windows-x64.zip")
@@ -21,7 +20,7 @@ if Compat.Sys.iswindows()
     end
 end
 
-if Compat.Sys.islinux()
+if Sys.islinux()
     #=if Sys.ARCH == :x86_64
         name, ext = splitext(splitext(basename(baseurl * "Linux-x64.tar.gz"))[1])
         uri = URI(baseurl * "Linux-x64.tar.gz")
@@ -52,12 +51,12 @@ if Compat.Sys.islinux()
         libCLBlast, installed_libpath=libpath, os=:Linux)
 end
 
-if Compat.Sys.isapple()
+if Sys.isapple()
     using Homebrew
     provides(Homebrew.HB, "homebrew/core/clblast", libCLBlast, os = :Darwin)
 end
 
-if Compat.Sys.islinux()
+if Sys.islinux()
     # BinDeps.jl seems to be broken, cf. https://github.com/JuliaLang/BinDeps.jl/issues/172
     wd = pwd()
     sourcedir = joinpath(@__DIR__, "CLBlast-" * version)
@@ -89,21 +88,16 @@ if Compat.Sys.islinux()
     open(joinpath(@__DIR__, "deps.jl"), "w") do file
         write(file,
 """
-if VERSION >= v"0.7.0-DEV.3382"
-    using Libdl
-end
+using Libdl
+
 # Macro to load a library
 macro checked_lib(libname, path)
-    if Libdl.dlopen_e(path) == C_NULL
-        error("Unable to load \n\n\$libname (\$path)\n\nPlease ",
-              "re-run Pkg.build(CLBlast), and restart Julia.")
-    end
+    Libdl.dlopen(path)
     quote
         const \$(esc(libname)) = \$path
     end
 end
 
-# Load dependencies
 @checked_lib libCLBlast "$libpath"
 """)
     end

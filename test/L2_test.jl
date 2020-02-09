@@ -18,21 +18,21 @@ end
         @test_throws DimensionMismatch CLBlast.gemv!('T', α, A_cl, x_cl, β, y_cl, queue=queue)
         @test_throws DimensionMismatch CLBlast.gemv!('C', α, A_cl, x_cl, β, y_cl, queue=queue)
         CLBlast.gemv!('N', α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.gemv!('N', α, A, x, β, y)
+        LinearAlgebra.BLAS.gemv!('N', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         @test_throws DimensionMismatch CLBlast.gemv!('N', α, A_cl, y_cl, β, x_cl, queue=queue)
         CLBlast.gemv!('T', α, A_cl, y_cl, β, x_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.gemv!('T', α, A, y, β, x)
+        LinearAlgebra.BLAS.gemv!('T', α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         @test_throws DimensionMismatch CLBlast.gemv!('N', α, A_cl, y_cl, β, x_cl, queue=queue)
         CLBlast.gemv!('C', α, A_cl, y_cl, β, x_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.gemv!('C', α, A, y, β, x)
+        LinearAlgebra.BLAS.gemv!('C', α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -53,19 +53,19 @@ end
         β = rand(elty)
 
         CLBlast.gbmv!('N', m_L2, kl, ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.gbmv!('N', m_L2, kl, ku, α, A, x, β, y)
+        LinearAlgebra.BLAS.gbmv!('N', m_L2, kl, ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.gbmv!('T', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.gbmv!('T', m_L2, kl, ku, α, A, y, β, x)
+        LinearAlgebra.BLAS.gbmv!('T', m_L2, kl, ku, α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.gbmv!('C', m_L2, kl, ku, α, A_cl, y_cl, β, x_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.gbmv!('C', m_L2, kl, ku, α, A, y, β, x)
+        LinearAlgebra.BLAS.gbmv!('C', m_L2, kl, ku, α, A, y, β, x)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -88,13 +88,13 @@ end
         β = rand(elty)
 
         CLBlast.hemv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.hemv!('U', α, A, x, β, y)
+        LinearAlgebra.BLAS.hemv!('U', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.hemv!('L', α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.hemv!('L', α, A, x, β, y)
+        LinearAlgebra.BLAS.hemv!('L', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -122,13 +122,13 @@ end
         β = rand(elty)
 
         CLBlast.hbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.hbmv!('U', ku, α, A, x, β, y)
+        LinearAlgebra.BLAS.hbmv!('U', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.hbmv!('L', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.hbmv!('L', ku, α, A, x, β, y)
+        LinearAlgebra.BLAS.hbmv!('L', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -156,13 +156,13 @@ end
         β = rand(elty)
 
         CLBlast.symv!('U', α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.symv!('U', α, A, x, β, y)
+        LinearAlgebra.BLAS.symv!('U', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.symv!('L', α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.symv!('L', α, A, x, β, y)
+        LinearAlgebra.BLAS.symv!('L', α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -190,13 +190,13 @@ end
         β = rand(elty)
 
         CLBlast.sbmv!('U', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.sbmv!('U', ku, α, A, x, β, y)
+        LinearAlgebra.BLAS.sbmv!('U', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
 
         CLBlast.sbmv!('L', ku, α, A_cl, x_cl, β, y_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.sbmv!('L', ku, α, A, x, β, y)
+        LinearAlgebra.BLAS.sbmv!('L', ku, α, A, x, β, y)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -219,7 +219,7 @@ end
 
         for uplo in ['U','L'], trans in ['N','T','C'], diag in ['N','U']
             CLBlast.trmv!(uplo, trans, diag, A_cl, x_cl, queue=queue)
-            Compat.LinearAlgebra.BLAS.trmv!(uplo, trans, diag, A, x)
+            LinearAlgebra.BLAS.trmv!(uplo, trans, diag, A, x)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -250,7 +250,7 @@ end
 
         for uplo in ['U','L'], trans in ['N','T','C'], diag in ['N','U']
             CLBlast.trsv!(uplo, trans, diag, A_cl, x_cl, queue=queue)
-            Compat.LinearAlgebra.BLAS.trsv!(uplo, trans, diag, A, x)
+            LinearAlgebra.BLAS.trsv!(uplo, trans, diag, A, x)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -280,7 +280,7 @@ end
         α = rand(elty)
 
         CLBlast.ger!(α, x_cl, y_cl, A_cl, queue=queue)
-        Compat.LinearAlgebra.BLAS.ger!(α, x, y, A)
+        LinearAlgebra.BLAS.ger!(α, x, y, A)
         @test cl.to_host(A_cl, queue=queue) ≈ A
         @test cl.to_host(x_cl, queue=queue) ≈ x
         @test cl.to_host(y_cl, queue=queue) ≈ y
@@ -303,7 +303,7 @@ end
 
         for uplo in ['U', 'L']
             CLBlast.her!(uplo, α, x_cl, A_cl, queue=queue)
-            Compat.LinearAlgebra.BLAS.her!(uplo, α, x, A)
+            LinearAlgebra.BLAS.her!(uplo, α, x, A)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end
@@ -326,7 +326,7 @@ end
 
         for uplo in ['U', 'L']
             CLBlast.syr!(uplo, α, x_cl, A_cl, queue=queue)
-            Compat.LinearAlgebra.BLAS.syr!(uplo, α, x, A)
+            LinearAlgebra.BLAS.syr!(uplo, α, x, A)
             @test cl.to_host(A_cl, queue=queue) ≈ A
             @test cl.to_host(x_cl, queue=queue) ≈ x
         end

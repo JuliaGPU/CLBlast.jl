@@ -1,6 +1,6 @@
 #import Base.LinAlg.BLAS: iamax
 
-@compat for (func, elty) in [(:CLBlastiSamax, Float32), (:CLBlastiDamax, Float64),
+for (func, elty) in [(:CLBlastiSamax, Float32), (:CLBlastiDamax, Float64),
                      (:CLBlastiCamax, ComplexF32), (:CLBlastiZamax, ComplexF64)]
     #TODO: (:CLBlastiHamax, Float16)
 

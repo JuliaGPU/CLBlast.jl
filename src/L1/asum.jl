@@ -1,6 +1,6 @@
 #import Base.LinAlg.BLAS: asum
 
-@compat for (func, elty) in [(:CLBlastSasum, Float32), (:CLBlastDasum, Float64),
+for (func, elty) in [(:CLBlastSasum, Float32), (:CLBlastDasum, Float64),
                      (:CLBlastScasum, ComplexF32), (:CLBlastDzasum, ComplexF64)]
     #TODO: (:CLBlastHasum, Float16)
 

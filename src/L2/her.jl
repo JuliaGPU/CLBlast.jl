@@ -1,5 +1,5 @@
 
-@compat for (func, elty, relty) in [(:CLBlastCher, ComplexF32, Float32), (:CLBlastZher, ComplexF64, Float64)]
+for (func, elty, relty) in [(:CLBlastCher, ComplexF32, Float32), (:CLBlastZher, ComplexF64, Float64)]
 
     @eval function $func(layout::CLBlastLayout, triangle::CLBlastTriangle,
                          n::Integer,
