@@ -3,7 +3,7 @@ using BinDeps
 @BinDeps.setup
 libnames = ["libCLBlast", "libclblast", "clblast"]
 libCLBlast = library_dependency("libCLBlast", aliases = libnames)
-version = "1.5.0"
+version = "1.5.1"
 
 if Sys.iswindows()
     if Sys.ARCH == :x86_64
