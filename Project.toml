@@ -12,6 +12,7 @@ OpenCL = "08131aa3-fb12-5dee-8b74-c09406e224a2"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 
 [compat]
+Homebrew = "0.7"
 OpenCL = "0.8"
 
 [extras]
